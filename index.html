@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DriveBy Bites — Roadside Discovery & CGI Priority Roulette</title>
+
+  <!-- PWA & Android/iOS Standalone Full-Screen Meta Tags -->
+  <meta name="theme-color" content="#09090b" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="DriveBy Bites" />
+  <meta name="description" content="Zero-look roadside restaurant capture and weighted Culinary Gravity Index decision roulette." />
+
+  <!-- Inline SVG App Icon for iOS & Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%2309090b'/%3E%3Ccircle cx='256' cy='256' r='190' fill='none' stroke='%23f59e0b' stroke-width='28'/%3E%3Cpath d='M256 96 L310 256 L256 416 L202 256 Z' fill='%23f59e0b'/%3E%3Ccircle cx='256' cy='256' r='28' fill='%2309090b'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%2309090b'/%3E%3Ccircle cx='256' cy='256' r='190' fill='none' stroke='%23f59e0b' stroke-width='28'/%3E%3Cpath d='M256 96 L310 256 L256 416 L202 256 Z' fill='%23f59e0b'/%3E%3Ccircle cx='256' cy='256' r='28' fill='%2309090b'/%3E%3C/svg%3E" />
+
+  <!-- Embedded PWA Web App Manifest via Data URI (Zero extra files needed on GitHub Pages) -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"DriveBy Bites","short_name":"DriveByBites","description":"Roadside restaurant capture and Culinary Gravity Index roulette","start_url":".","display":"standalone","background_color":"#09090b","theme_color":"#09090b","orientation":"portrait","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Crect width=%27512%27 height=%27512%27 rx=%27112%27 fill=%27%2309090b%27/%3E%3Ccircle cx=%27256%27 cy=%27256%27 r=%27190%27 fill=%27none%27 stroke=%27%23f59e0b%27 stroke-width=%2728%27/%3E%3Cpath d=%27M256 96 L310 256 L256 416 L202 256 Z%27 fill=%27%23f59e0b%27/%3E%3Ccircle cx=%27256%27 cy=%27256%27 r=%2728%27 fill=%27%2309090b%27/%3E%3C/svg%3E","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}]}' />
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            obsidian: '#09090b',
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #09090b;
+      color: #f4f4f5;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior-y: contain;
+    }
+
+    /* Custom subtle scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09090b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 9999px;
+    }
+
+    /* Pointer tick pulse animation when wheel spins */
+    @keyframes pointerTick {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(4px) rotate(-14deg); }
+    }
+    .pointer-ticking {
+      animation: pointerTick 0.14s infinite ease-in-out;
+    }
+
+    /* Pulse ring for zero-look capture button */
+    @keyframes radarPulse {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55); }
+      70% { box-shadow: 0 0 0 22px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .radar-pulse {
+      animation: radarPulse 2.2s infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#09090b] text-zinc-100 selection:bg-amber-500 selection:text-zinc-950 pb-24 sm:pb-8">
+
+  <!-- =====================================================================
+       TOP AUTOMOTIVE HUD HEADER
+       ===================================================================== -->
+  <header class="sticky top-0 z-30 bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800/90 px-4 py-3">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
+      <!-- Brand Identity -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20 border border-amber-300/30 shrink-0">
+          <i data-lucide="compass" class="w-5 h-5 text-zinc-950 stroke-[2.5]"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-black tracking-tight text-white">
+              DRIVEBY <span class="text-amber-400">BITES</span>
+            </h1>
+            <span id="header-active-badge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              6 Active
+            </span>
+          </div>
+          <p class="text-[11px] text-zinc-400 hidden sm:block">
+            Zero-Look Roadside Capture &amp; Culinary Gravity Index (CGI) Roulette
+          </p>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation Tabs -->
+      <nav class="hidden md:flex items-center gap-1 bg-zinc-900 p-1 rounded-2xl border border-zinc-800">
+        <button onclick="switchTab('roulette')" data-tab="roulette" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-amber-500 text-zinc-950">
+          <i data-lucide="disc" class="w-4 h-4"></i>
+          Priority Roulette
+        </button>
+        <button onclick="switchTab('capture')" data-tab="capture" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          <i data-lucide="car" class="w-4 h-4"></i>
+          Zero-Look Capture
+        </button>
+        <button onclick="switchTab('inbox')" data-tab="inbox" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          <i data-lucide="inbox" class="w-4 h-4"></i>
+          Capture Inbox
+          <span id="desktop-inbox-count" class="hidden px-1.5 py-0.2 rounded-full text-[10px] font-black bg-rose-500 text-white">0</span>
+        </button>
+        <button onclick="switchTab('engine')" data-tab="engine" class="nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white">
+          <i data-lucide="sliders" class="w-4 h-4"></i>
+          CGI Engine &amp; Deploy
+        </button>
+      </nav>
+
+      <!-- Backup / Restore Trigger -->
+      <button onclick="openBackupModal()" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold text-zinc-300 transition-colors">
+        <i data-lucide="database" class="w-4 h-4 text-amber-400"></i>
+        <span class="hidden sm:inline">Backup / JSON</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       TOAST NOTIFICATION BANNER
+       ===================================================================== -->
+  <div id="toast-banner" class="fixed top-20 right-4 z-50 max-w-sm bg-zinc-900 border border-emerald-500/60 text-emerald-300 px-4 py-3 rounded-2xl shadow-2xl hidden items-center gap-3 transition-all">
+    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+    <span id="toast-text" class="text-xs font-semibold leading-snug"></span>
+  </div>
+
+  <!-- =====================================================================
+       MAIN APPLICATION VIEWPORT
+       ===================================================================== -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 pt-5">
+
+    <!-- ===================================================================
+         TAB 1: PRIORITY ROULETTE
+         =================================================================== -->
+    <section id="tab-roulette" class="tab-panel grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Left 7 Cols: Weighted Roulette Wheel & Filters -->
+      <div class="lg:col-span-7 bg-zinc-900/90 border border-zinc-800 rounded-3xl p-5 sm:p-6 flex flex-col justify-between shadow-xl">
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-zinc-800">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">
+                Weighted Culinary Gravity Index (CGI)
+              </span>
+              <h2 class="text-lg font-extrabold text-white">
+                Slice Width = Live Priority Odds
+              </h2>
+            </div>
+            <button onclick="resetSessionSnoozes()" class="text-xs font-bold text-zinc-400 hover:text-white bg-zinc-950 px-3 py-1.5 rounded-xl border border-zinc-800 flex items-center gap-1.5">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              Restore Snoozed
+            </button>
+          </div>
+
+          <!-- Quick Filter Pills -->
+          <div id="filter-pills-container" class="flex items-center gap-2 flex-wrap mt-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- SVG Weighted Roulette Wheel Container -->
+        <div class="relative my-6 flex flex-col items-center justify-center">
+          <!-- Fixed Top Needle Pointer -->
+          <div id="wheel-pointer" class="z-20 -mb-3 flex flex-col items-center pointer-events-none">
+            <div class="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[26px] border-t-amber-400 drop-shadow-[0_4px_12px_rgba(245,158,11,0.8)]"></div>
+          </div>
+
+          <!-- Empty State if filters exclude everything -->
+          <div id="wheel-empty-state" class="hidden h-72 w-full flex-col items-center justify-center text-center p-6 border border-dashed border-zinc-800 rounded-3xl bg-zinc-950/60">
+            <i data-lucide="alert-triangle" class="w-10 h-10 text-amber-400 mb-2"></i>
+            <p class="text-sm font-bold text-white">No active restaurants match these filters.</p>
+            <button onclick="clearAllFilters()" class="mt-3 px-4 py-2 rounded-xl bg-amber-500 text-zinc-950 text-xs font-black">
+              Reset Filters &amp; Snoozes
+            </button>
+          </div>
+
+          <!-- Interactive SVG Wheel -->
+          <div id="wheel-wrapper" class="relative w-[300px] h-[300px] sm:w-[350px] sm:h-[350px] flex items-center justify-center">
+            <svg id="roulette-svg" viewBox="0 0 320 320" class="w-full h-full drop-shadow-[0_0_28px_rgba(0,0,0,0.9)]" style="transform: rotate(0deg);">
+              <!-- Slices rendered dynamically via JS -->
+            </svg>
+          </div>
+
+          <!-- Primary Spin Action -->
+          <div class="w-full mt-5 flex flex-col sm:flex-row gap-3">
+            <button id="spin-btn" onclick="spinRouletteWheel()" class="flex-1 py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-zinc-950 font-black text-base tracking-wide shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2.5 active:scale-[0.98] transition-all">
+              <i data-lucide="sparkles" class="w-5 h-5 stroke-[2.5]"></i>
+              <span id="spin-btn-label">SPIN PRIORITY ROULETTE</span>
+            </button>
+            <button onclick="switchTab('capture')" class="py-4 px-5 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-emerald-400 border border-emerald-500/30 font-bold text-xs flex items-center justify-center gap-2 whitespace-nowrap">
+              <i data-lucide="car" class="w-4 h-4"></i>
+              + Pin Roadside Spot
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right 5 Cols: 48-Hr Palate Fatigue + Ranked Queue -->
+      <div class="lg:col-span-5 flex flex-col gap-5">
+        <!-- 48-Hour Palate Fatigue Toggles -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-3xl p-5">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+              <i data-lucide="flame" class="w-3.5 h-3.5"></i>
+              48-Hour Palate Fatigue (-25 CGI)
+            </span>
+            <button onclick="switchTab('engine')" class="text-xs font-bold text-amber-400 hover:underline">
+              Tune Weights →
+            </button>
+          </div>
+          <p class="text-xs text-zinc-400 mb-3">
+            Toggle what you ate recently to automatically shrink matching slices on the wheel:
+          </p>
+          <div class="grid grid-cols-3 gap-2">
+            <button id="fatigue-btn-pizza" onclick="toggleFatigue('pizza')" class="py-2.5 px-2 rounded-xl text-xs font-bold border bg-zinc-950 border-zinc-800 text-zinc-400 transition-all">
+              🍕 Had Pizza
+            </button>
+            <button id="fatigue-btn-tacos" onclick="toggleFatigue('tacos')" class="py-2.5 px-2 rounded-xl text-xs font-bold border bg-zinc-950 border-zinc-800 text-zinc-400 transition-all">
+              🌮 Had Tacos
+            </button>
+            <button id="fatigue-btn-burgers" onclick="toggleFatigue('burgers')" class="py-2.5 px-2 rounded-xl text-xs font-bold border bg-zinc-950 border-zinc-800 text-zinc-400 transition-all">
+              🍔 Burgers/Subs
+            </button>
+          </div>
+        </div>
+
+        <!-- Ranked Contenders List -->
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-3xl p-5 flex-1 flex flex-col">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h3 class="text-sm font-black text-white uppercase tracking-wider">
+                Priority Contenders (<span id="queue-count">0</span>)
+              </h3>
+              <p class="text-xs text-zinc-400">Tap any card to open its Tactical Dossier</p>
+            </div>
+          </div>
+          <div id="ranked-queue-list" class="space-y-2.5 max-h-[410px] overflow-y-auto pr-1">
+            <!-- Rendered dynamically via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 2: ZERO-LOOK CAPTURE (IN-CAR UX)
+         =================================================================== -->
+    <section id="tab-capture" class="tab-panel hidden grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-7 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 flex flex-col justify-between shadow-xl">
+        <div>
+          <div class="flex items-center justify-between gap-2 pb-4 border-b border-zinc-800">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-400 block">
+                In-Car Low-Cognitive-Load Mode
+              </span>
+              <h2 class="text-xl font-black text-white">Zero-Look Roadside Pin</h2>
+            </div>
+            <div id="gps-status-pill" class="px-3 py-1.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs font-mono text-zinc-300">
+              GPS: Standby
+            </div>
+          </div>
+
+          <!-- 1. Side-of-Road Vector Selector -->
+          <div class="mt-5">
+            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400 block mb-2.5">
+              1. Side-of-Road Bearing Vector
+            </label>
+            <div class="grid grid-cols-3 gap-3">
+              <button onclick="selectCaptureVector('On the Left')" data-vector="On the Left" class="vector-btn py-4 px-2 rounded-2xl font-extrabold text-xs sm:text-sm border-2 bg-zinc-950 border-zinc-800 text-zinc-400 flex flex-col items-center gap-1.5 transition-all">
+                <i data-lucide="arrow-up-left" class="w-5 h-5"></i>
+                On the Left
+              </button>
+              <button onclick="selectCaptureVector('Just Passed It')" data-vector="Just Passed It" class="vector-btn py-4 px-2 rounded-2xl font-extrabold text-xs sm:text-sm border-2 bg-zinc-950 border-zinc-800 text-zinc-400 flex flex-col items-center gap-1.5 transition-all">
+                <i data-lucide="corner-down-left" class="w-5 h-5"></i>
+                Just Passed It
+              </button>
+              <button onclick="selectCaptureVector('On the Right')" data-vector="On the Right" class="vector-btn py-4 px-2 rounded-2xl font-extrabold text-xs sm:text-sm border-2 bg-amber-500/20 border-amber-400 text-amber-300 flex flex-col items-center gap-1.5 transition-all">
+                <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                On the Right
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Voice Dictation / Quick Note Input -->
+          <div class="mt-5">
+            <div class="flex items-center justify-between mb-2">
+              <label for="capture-note-input" class="text-xs font-bold uppercase tracking-wider text-zinc-400">
+                2. Voice Memo or Quick Sign Cue (Optional)
+              </label>
+              <button id="voice-dictate-btn" onclick="startVoiceDictation()" type="button" class="px-3 py-1 rounded-lg bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                <i data-lucide="mic" class="w-3.5 h-3.5"></i>
+                <span id="voice-dictate-label">Dictate Voice Note</span>
+              </button>
+            </div>
+            <input id="capture-note-input" type="text" placeholder="e.g., Neon taco sign next to car wash, packed parking lot..." class="w-full px-4 py-3 rounded-2xl bg-zinc-950 border border-zinc-800 focus:border-amber-400 focus:outline-none text-sm text-white placeholder-zinc-600" />
+            <!-- Quick 1-Tap Sign Cue Chips -->
+            <div class="flex flex-wrap gap-1.5 mt-2">
+              <button type="button" onclick="appendQuickCue('Neon sign / Hole-in-the-wall')" class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-zinc-400 border border-zinc-800">+ Neon sign</button>
+              <button type="button" onclick="appendQuickCue('Packed strip mall plaza')" class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-zinc-400 border border-zinc-800">+ Strip mall plaza</button>
+              <button type="button" onclick="appendQuickCue('Drive-thru line wrapped around')" class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-zinc-400 border border-zinc-800">+ Busy drive-thru</button>
+              <button type="button" onclick="appendQuickCue('Smelled charcoal grill outside')" class="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-zinc-400 border border-zinc-800">+ Charcoal smoke</button>
+            </div>
+          </div>
+
+          <!-- 3. GIANT THUMB-FRIENDLY CAPTURE TRIGGER -->
+          <div class="my-7">
+            <button id="giant-capture-btn" onclick="captureRoadsideSpot()" class="radar-pulse w-full h-44 rounded-3xl bg-gradient-to-b from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border-4 border-emerald-300/80 text-zinc-950 flex flex-col items-center justify-center gap-2 shadow-2xl active:scale-[0.97] transition-all">
+              <div class="w-14 h-14 rounded-2xl bg-zinc-950/20 flex items-center justify-center">
+                <i data-lucide="map-pin" class="w-8 h-8 text-zinc-950 stroke-[2.5]"></i>
+              </div>
+              <span id="giant-capture-title" class="text-xl sm:text-2xl font-black tracking-tight">
+                TAP TO PIN ROADSIDE SPOT
+              </span>
+              <span id="giant-capture-sub" class="text-xs font-extrabold opacity-85 px-4 text-center">
+                Captures Live GPS + "On the Right" Vector → Sends to Inbox
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-between gap-3">
+          <span class="text-xs text-zinc-400">
+            Captured pins wait safely in your <strong class="text-white">Capture Inbox</strong> until you park.
+          </span>
+          <button onclick="switchTab('inbox')" class="px-3.5 py-2 rounded-xl bg-amber-500 text-zinc-950 font-black text-xs whitespace-nowrap">
+            View Inbox (<span id="capture-tab-inbox-badge">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Right 5 Cols: Field Manual -->
+      <div class="lg:col-span-5 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 flex flex-col justify-between">
+        <div class="space-y-4">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">
+            How Roadside Telemetry Works
+          </span>
+          <h3 class="text-lg font-black text-white">
+            Capture at 45 MPH, Verify When Parked
+          </h3>
+
+          <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <h4 class="text-xs font-bold uppercase text-emerald-400 mb-1 flex items-center gap-1.5">
+              <i data-lucide="navigation" class="w-4 h-4"></i>
+              1. Real HTML5 Geolocation + Fallback
+            </h4>
+            <p class="text-xs text-zinc-300 leading-relaxed">
+              Tapping the green button requests your phone's high-accuracy GPS coordinates (<code class="text-amber-300">navigator.geolocation</code>) and compass heading. If tested on a desktop without GPS, it generates a realistic Chicagoland corridor pin so you can test the full workflow.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <h4 class="text-xs font-bold uppercase text-amber-400 mb-1 flex items-center gap-1.5">
+              <i data-lucide="mic" class="w-4 h-4"></i>
+              2. Hands-Free Web Speech Dictation
+            </h4>
+            <p class="text-xs text-zinc-300 leading-relaxed">
+              Tap <strong>Dictate Voice Note</strong> to speak what caught your eye (e.g., <em>"Peruvian rotisserie chicken in the corner strip mall"</em>). Your phone transcribes it directly into the pin record.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <h4 class="text-xs font-bold uppercase text-sky-400 mb-1 flex items-center gap-1.5">
+              <i data-lucide="external-link" class="w-4 h-4"></i>
+              3. 1-Tap Google Maps Strip-Mall Lookup
+            </h4>
+            <p class="text-xs text-zinc-300 leading-relaxed">
+              Later, open the <strong>Capture Inbox</strong> and tap <strong>Verify on Google Maps</strong>. It opens Google Maps centered on your exact captured coordinates at zoom level 17z so you can immediately identify the storefront name, rating, and review count.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 3: CAPTURE INBOX (PARKED VERIFICATION)
+         =================================================================== -->
+    <section id="tab-inbox" class="tab-panel hidden space-y-6">
+      <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">
+            Strip-Mall Disambiguation &amp; Promotion
+          </span>
+          <h2 class="text-xl font-black text-white">
+            Unverified Roadside Captures (<span id="inbox-header-count">0</span>)
+          </h2>
+          <p class="text-xs text-zinc-400 mt-0.5">
+            Verify each pin on Google Maps, enter its quick stats, and promote it onto your Priority Roulette Wheel.
+          </p>
+        </div>
+        <button onclick="switchTab('capture')" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-xs flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          Pin Another Roadside Spot
+        </button>
+      </div>
+
+      <div id="inbox-list-container" class="space-y-4">
+        <!-- Rendered dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB 4: CGI ENGINE & GITHUB PAGES DEPLOYMENT GUIDE
+         =================================================================== -->
+    <section id="tab-engine" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 7 Cols: Live CGI Algorithm Weight Sliders -->
+        <div class="lg:col-span-7 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">
+                Culinary Gravity Index (CGI) Formula
+              </span>
+              <h2 class="text-xl font-black text-white">Algorithm Weight Tuners</h2>
+            </div>
+            <button onclick="resetWeightsToDefault()" class="px-3 py-1.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs font-bold text-zinc-400 hover:text-white">
+              Reset 30/30/20/20
+            </button>
+          </div>
+
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            Adjust how heavily each obscure metric influences the roulette wheel slices. Changes save automatically to your phone's <code class="text-amber-300">localStorage</code>.
+          </p>
+
+          <!-- Slider 1: Anomaly Quotient -->
+          <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-sm font-extrabold text-white">1. Hole-in-the-Wall Anomaly Quotient (Aq)</span>
+              <span id="weight-val-anomaly" class="px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono font-bold text-xs">30%</span>
+            </div>
+            <p class="text-xs text-zinc-400 mb-3">
+              Rewards the sweet spot of <strong>4.1★–4.6★</strong> with <strong>40–450 reviews</strong> (penalizes massive tourist chains and unproven spots).
+            </p>
+            <input id="slider-anomaly" type="range" min="0" max="100" value="30" oninput="updateWeight('anomaly', this.value)" class="w-full h-2 bg-zinc-800 rounded-lg cursor-pointer accent-amber-400" />
+          </div>
+
+          <!-- Slider 2: Personal Taste Match -->
+          <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-sm font-extrabold text-white">2. Personal Taste Match (Gs)</span>
+              <span id="weight-val-taste" class="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-mono font-bold text-xs">30%</span>
+            </div>
+            <p class="text-xs text-zinc-400 mb-3">
+              Scales directly from your 1–10 personal gut-check craving score assigned when logging or verifying the spot.
+            </p>
+            <input id="slider-taste" type="range" min="0" max="100" value="30" oninput="updateWeight('taste', this.value)" class="w-full h-2 bg-zinc-800 rounded-lg cursor-pointer accent-emerald-400" />
+          </div>
+
+          <!-- Slider 3: Curiosity Urgency & Aging -->
+          <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-sm font-extrabold text-white">3. Curiosity Urgency &amp; Aging (Uv)</span>
+              <span id="weight-val-urgency" class="px-2.5 py-0.5 rounded-lg bg-sky-500/20 text-sky-300 font-mono font-bold text-xs">20%</span>
+            </div>
+            <p class="text-xs text-zinc-400 mb-3">
+              Boosts fresh discoveries pinned in the last 14 days and "Use-It-or-Lose-It" spots lingering over 45 days.
+            </p>
+            <input id="slider-urgency" type="range" min="0" max="100" value="20" oninput="updateWeight('urgency', this.value)" class="w-full h-2 bg-zinc-800 rounded-lg cursor-pointer accent-sky-400" />
+          </div>
+
+          <!-- Slider 4: Contextual Friction / Proximity -->
+          <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-sm font-extrabold text-white">4. Contextual Friction &amp; Proximity (Cb)</span>
+              <span id="weight-val-context" class="px-2.5 py-0.5 rounded-lg bg-purple-500/20 text-purple-300 font-mono font-bold text-xs">20%</span>
+            </div>
+            <p class="text-xs text-zinc-400 mb-3">
+              Favors quick-turnaround spots along familiar corridors and penalizes spots closing soon.
+            </p>
+            <input id="slider-context" type="range" min="0" max="100" value="20" oninput="updateWeight('context', this.value)" class="w-full h-2 bg-zinc-800 rounded-lg cursor-pointer accent-purple-400" />
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Live Re-Rank Preview + GitHub Pages SOP -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+          <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+            <h3 class="text-sm font-black text-white uppercase tracking-wider mb-1">
+              Live Wheel Probability Preview
+            </h3>
+            <p class="text-xs text-zinc-400 mb-4">
+              Real-time share of the roulette wheel based on current sliders:
+            </p>
+            <div id="engine-preview-bars" class="space-y-3">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Built-in GitHub Pages Hosting Guide -->
+          <div class="bg-zinc-900 border border-sky-500/40 rounded-3xl p-6 space-y-3">
+            <div class="flex items-center gap-2 text-sky-400 font-black text-xs uppercase tracking-wider">
+              <i data-lucide="github" class="w-4 h-4"></i>
+              GitHub Pages 3-Minute Deploy SOP
+            </div>
+            <h3 class="text-base font-black text-white">
+              Host Free &amp; Install on Android
+            </h3>
+            <ol class="text-xs text-zinc-300 space-y-2 list-decimal list-inside leading-relaxed">
+              <li>Create a new public repo on <strong>github.com</strong> named <code class="text-amber-300">driveby-bites</code>.</li>
+              <li>Click <strong>Add file → Create new file</strong>, name it <code class="text-amber-300">index.html</code>, paste this file's HTML, and commit.</li>
+              <li>Go to <strong>Settings → Pages</strong>, set Source to <strong>Deploy from a branch</strong> (<code class="text-emerald-400">main</code> / <code class="text-emerald-400">/root</code>), and click <strong>Save</strong>.</li>
+              <li>Open <code class="text-sky-300">https://&lt;username&gt;.github.io/driveby-bites/</code> in <strong>Chrome on Android</strong>.</li>
+              <li>Tap <strong>⋮ → Add to Home screen / Install app</strong> for a full-screen native-style icon!</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================================
+       MOBILE BOTTOM NAVIGATION BAR
+       ===================================================================== -->
+  <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-800 px-2 py-2 grid grid-cols-4 gap-1">
+    <button onclick="switchTab('roulette')" data-tab="roulette" class="mobile-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-bold text-amber-400 bg-zinc-900">
+      <i data-lucide="disc" class="w-5 h-5 mb-0.5"></i>
+      Roulette
+    </button>
+    <button onclick="switchTab('capture')" data-tab="capture" class="mobile-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-bold text-zinc-400">
+      <i data-lucide="car" class="w-5 h-5 mb-0.5"></i>
+      Pin Spot
+    </button>
+    <button onclick="switchTab('inbox')" data-tab="inbox" class="mobile-nav-btn relative flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-bold text-zinc-400">
+      <i data-lucide="inbox" class="w-5 h-5 mb-0.5"></i>
+      Inbox
+      <span id="mobile-inbox-badge" class="hidden absolute top-1 right-4 px-1.5 py-0.2 rounded-full text-[9px] font-black bg-rose-500 text-white">0</span>
+    </button>
+    <button onclick="switchTab('engine')" data-tab="engine" class="mobile-nav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-bold text-zinc-400">
+      <i data-lucide="sliders" class="w-5 h-5 mb-0.5"></i>
+      CGI &amp; Deploy
+    </button>
+  </nav>
+
+  <!-- =====================================================================
+       TACTICAL DOSSIER POP-UP MODAL
+       ===================================================================== -->
+  <div id="dossier-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-zinc-900 border-2 border-amber-500/70 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 my-auto">
+      <!-- Header -->
+      <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-4">
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-zinc-950">
+              Tactical Dossier
+            </span>
+            <span id="modal-odds-badge" class="text-xs font-bold text-emerald-400">
+              22% Wheel Odds
+            </span>
+            <span id="modal-visited-badge" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40">
+              Visited Before
+            </span>
+          </div>
+          <h2 id="modal-name" class="text-2xl font-black text-white mt-1.5">Restaurant Name</h2>
+          <p id="modal-meta" class="text-xs text-zinc-400 mt-0.5">Corridor • 4.4★ (180 reviews)</p>
+        </div>
+
+        <div class="px-3.5 py-2 rounded-2xl bg-zinc-950 border border-amber-500/40 text-center shrink-0">
+          <span class="text-[10px] font-bold uppercase text-zinc-400 block">CGI Score</span>
+          <span id="modal-cgi-score" class="text-2xl font-black text-amber-400">92</span>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div id="modal-tags" class="flex flex-wrap gap-1.5"></div>
+
+      <!-- 4-Pillar Score Breakdown Bars -->
+      <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-3">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400 block">
+          4-Pillar Culinary Gravity Index Breakdown
+        </span>
+        <div class="space-y-2 text-xs">
+          <div>
+            <div class="flex justify-between font-bold mb-1">
+              <span class="text-zinc-300">Hole-in-the-Wall Anomaly (Aq)</span>
+              <span id="bar-val-aq" class="text-amber-400 font-mono">90/100</span>
+            </div>
+            <div class="w-full h-2 bg-zinc-900 rounded-full overflow-hidden">
+              <div id="bar-fill-aq" class="h-full bg-amber-400 rounded-full" style="width: 90%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between font-bold mb-1">
+              <span class="text-zinc-300">Personal Taste Match (Gs)</span>
+              <span id="bar-val-gs" class="text-emerald-400 font-mono">90/100</span>
+            </div>
+            <div class="w-full h-2 bg-zinc-900 rounded-full overflow-hidden">
+              <div id="bar-fill-gs" class="h-full bg-emerald-400 rounded-full" style="width: 90%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between font-bold mb-1">
+              <span class="text-zinc-300">Curiosity Urgency &amp; Aging (Uv)</span>
+              <span id="bar-val-uv" class="text-sky-400 font-mono">85/100</span>
+            </div>
+            <div class="w-full h-2 bg-zinc-900 rounded-full overflow-hidden">
+              <div id="bar-fill-uv" class="h-full bg-sky-400 rounded-full" style="width: 85%"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between font-bold mb-1">
+              <span class="text-zinc-300">Contextual Proximity &amp; Fit (Cb)</span>
+              <span id="bar-val-cb" class="text-purple-400 font-mono">88/100</span>
+            </div>
+            <div class="w-full h-2 bg-zinc-900 rounded-full overflow-hidden">
+              <div id="bar-fill-cb" class="h-full bg-purple-400 rounded-full" style="width: 88%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Original Drive-By Voice Note + Google Maps Link -->
+      <div class="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-2.5">
+        <div class="text-xs">
+          <span class="font-bold uppercase text-amber-400">Drive-By Voice Note: </span>
+          <span id="modal-voice-note" class="italic text-zinc-300"></span>
+        </div>
+        <div class="pt-2 border-t border-zinc-900 flex items-center justify-between">
+          <span id="modal-corridor-tag" class="text-xs font-mono text-zinc-400"></span>
+          <a id="modal-gmaps-link" href="#" target="_blank" rel="noopener noreferrer" class="text-xs font-bold text-sky-400 hover:underline flex items-center gap-1">
+            Open in Google Maps
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- 3 Tactical Action Buttons -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+        <button id="modal-btn-roll" class="py-3.5 px-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-500/20">
+          <i data-lucide="navigation" class="w-4 h-4"></i>
+          Let's Roll
+        </button>
+        <button id="modal-btn-snooze" class="py-3.5 px-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-amber-500/30 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5">
+          <i data-lucide="pause-circle" class="w-4 h-4"></i>
+          Snooze Today
+        </button>
+        <button id="modal-btn-veto" class="py-3.5 px-3 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/40 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5">
+          <i data-lucide="x-circle" class="w-4 h-4"></i>
+          Veto (-30%)
+        </button>
+      </div>
+
+      <button onclick="closeDossierModal()" class="w-full text-center text-xs font-semibold text-zinc-500 hover:text-zinc-300 pt-1">
+        Close Dossier
+      </button>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       BACKUP / RESTORE JSON & RESET DEMO DATA MODAL
+       ===================================================================== -->
+  <div id="backup-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+        <h3 class="text-lg font-black text-white">Local Data &amp; JSON Backup</h3>
+        <button onclick="closeBackupModal()" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-zinc-400 leading-relaxed">
+        All spots, inbox captures, veto multipliers, and CGI weights are saved offline in your browser's <code class="text-amber-300">localStorage</code>. Export a JSON snapshot anytime to move your list between phone and desktop.
+      </p>
+
+      <div class="space-y-2.5">
+        <button onclick="exportJsonBackup()" class="w-full py-3 px-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          Download JSON Backup File
+        </button>
+
+        <label class="w-full py-3 px-4 rounded-2xl bg-zinc-950 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+          <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i>
+          Import JSON Backup File
+          <input type="file" accept=".json" onchange="importJsonBackup(event)" class="hidden" />
+        </label>
+
+        <button onclick="resetDemoData()" class="w-full py-3 px-4 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+          Reset Demo Data (6 Sample Spots)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       APPLICATION JAVASCRIPT ENGINE (STATE, CGI MATH, SVG WHEEL, SPEECH/GPS)
+       ===================================================================== -->
+  <script>
+    const STORAGE_KEY = 'driveby_bites_v1_state';
+
+    // 6 Realistic, Distinct Pre-Populated Sample Restaurants
+    const DEFAULT_RESTAURANTS = [
+      {
+        id: 'spot-birria',
+        name: 'El Fuego Birria & Consomé',
+        corridor: 'Ogden Ave Corridor (0.8 mi)',
+        lat: 41.7819,
+        lng: -88.1472,
+        category: 'Fast Casual',
+        fatigueGroup: 'tacos',
+        isStripMallGem: true,
+        isOpenLate: true,
+        googleRating: 4.4,
+        reviewCount: 168,
+        tasteScore: 9.5,
+        daysOnList: 6,
+        repeatCaptures: 3,
+        proximityScore: 92,
+        vetoMultiplier: 1.0,
+        visited: false,
+        color: '#f59e0b',
+        voiceNote: '"Neon cactus sign on the right next to the muffler shop, line out the door at 8 PM"',
+        tags: ['#Birria', '#StripMallGem', '#OpenLate', '#CashFriendly']
+      },
+      {
+        id: 'spot-beef',
+        name: "Johnny's Hot-Dipped Beef Stand",
+        corridor: '75th St & Rickert (1.1 mi)',
+        lat: 41.7488,
+        lng: -88.1650,
+        category: 'Fast Casual',
+        fatigueGroup: 'burgers',
+        isStripMallGem: false,
+        isOpenLate: false,
+        googleRating: 4.3,
+        reviewCount: 285,
+        tasteScore: 9.2,
+        daysOnList: 11,
+        repeatCaptures: 2,
+        proximityScore: 88,
+        vetoMultiplier: 1.0,
+        visited: false,
+        color: '#3b82f6',
+        voiceNote: '"Hand-painted Vienna Beef sign, house hot giardiniera jars stacked in the window"',
+        tags: ['#ItalianBeef', '#Giardiniera', '#QuickLunch', '#LocalLegend']
+      },
+      {
+        id: 'spot-detroit',
+        name: 'Motor City Frico Crust Pizza',
+        corridor: 'Route 59 South (1.5 mi)',
+        lat: 41.7642,
+        lng: -88.2041,
+        category: 'Fast Casual',
+        fatigueGroup: 'pizza',
+        isStripMallGem: true,
+        isOpenLate: false,
+        googleRating: 4.5,
+        reviewCount: 212,
+        tasteScore: 9.6,
+        daysOnList: 4,
+        repeatCaptures: 2,
+        proximityScore: 84,
+        vetoMultiplier: 1.0,
+        visited: false,
+        color: '#10b981',
+        voiceNote: '"Corner unit in brick strip plaza, huge poster of caramelized Wisconsin brick cheese edges"',
+        tags: ['#DetroitStylePizza', '#StripMallGem', '#FricoCrust', '#CupPepperoni']
+      },
+      {
+        id: 'spot-peruvian',
+        name: 'Brasa Roja Peruvian Charcoal',
+        corridor: 'Aurora Ave Plaza (1.9 mi)',
+        lat: 41.7715,
+        lng: -88.1790,
+        category: 'Sit-Down',
+        fatigueGroup: 'other',
+        isStripMallGem: true,
+        isOpenLate: false,
+        googleRating: 4.6,
+        reviewCount: 134,
+        tasteScore: 9.0,
+        daysOnList: 9,
+        repeatCaptures: 1,
+        proximityScore: 81,
+        vetoMultiplier: 1.0,
+        visited: false,
+        color: '#ec4899',
+        voiceNote: '"Smelled wood-fired rotisserie smoke from 2 blocks away, bright green Aji sauce callout"',
+        tags: ['#PeruvianChicken', '#StripMallGem', '#AjiVerde', '#WoodFired']
+      },
+      {
+        id: 'spot-diner',
+        name: 'Starlight 24-Hr Chrome Diner',
+        corridor: 'Washington St (0.9 mi)',
+        lat: 41.7751,
+        lng: -88.1489,
+        category: 'Sit-Down',
+        fatigueGroup: 'burgers',
+        isStripMallGem: false,
+        isOpenLate: true,
+        googleRating: 4.1,
+        reviewCount: 390,
+        tasteScore: 8.2,
+        daysOnList: 52,
+        repeatCaptures: 1,
+        proximityScore: 95,
+        vetoMultiplier: 1.0,
+        visited: false,
+        color: '#8b5cf6',
+        voiceNote: '"Classic stainless-steel railcar diner open past midnight, huge skillet breakfast menu"',
+        tags: ['#LateNightDiner', '#OpenLate', '#Skillets', '#RetroChrome']
+      },
+      {
+        id: 'spot-smash',
+        name: 'Griddle & Tallow Burger Shack',
+        corridor: 'Route 59 North (2.1 mi)',
+        lat: 41.7920,
+        lng: -88.2035,
+        category: 'Fast Casual',
+        fatigueGroup: 'burgers',
+        isStripMallGem: true,
+        isOpenLate: true,
+        googleRating: 4.5,
+        reviewCount: 118,
+        tasteScore: 9.3,
+        daysOnList: 3,
+        repeatCaptures: 3,
+        proximityScore: 79,
+        vetoMultiplier: 1.0,
+        visited: false,
+        color: '#f97316',
+        voiceNote: '"Tiny walk-up shack advertising Oklahoma onion smashburgers & beef tallow fries"',
+        tags: ['#SmashBurger', '#StripMallGem', '#OpenLate', '#TallowFries']
+      }
+    ];
+
+    const DEFAULT_INBOX = [
+      {
+        id: 'pin-demo-1',
+        timestamp: 'Yesterday, 6:15 PM',
+        vector: 'On the Right',
+        lat: 41.7689,
+        lng: -88.2044,
+        voiceNote: '"Saw a bright yellow banner for hand-pulled Lanzhou beef noodle soup in the strip mall"'
+      }
+    ];
+
+    const DEFAULT_WEIGHTS = {
+      anomaly: 30,
+      taste: 30,
+      urgency: 20,
+      context: 20
+    };
+
+    const SLICE_PALETTE = ['#f59e0b', '#10b981', '#3b82f6', '#ec4899', '#8b5cf6', '#f97316', '#14b8a6', '#eab308'];
+
+    // Application Runtime State
+    let appState = {
+      restaurants: [],
+      inbox: [],
+      weights: { ...DEFAULT_WEIGHTS },
+      activeFilter: 'All',
+      fatigue: { pizza: false, tacos: false, burgers: false },
+      selectedVector: 'On the Right'
+    };
+
+    // Ephemeral Session State (not persisted across hard resets)
+    let sessionSnoozedIds = new Set();
+    let currentWheelRotation = 0;
+    let isWheelSpinning = false;
+    let activeDossierSpotId = null;
+
+    // -----------------------------------------------------------------------
+    // 1. INITIALIZATION & LOCALSTORAGE PERSISTENCE
+    // -----------------------------------------------------------------------
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appState.restaurants = Array.isArray(parsed.restaurants) ? parsed.restaurants : [...DEFAULT_RESTAURANTS];
+          appState.inbox = Array.isArray(parsed.inbox) ? parsed.inbox : [...DEFAULT_INBOX];
+          appState.weights = parsed.weights ? { ...DEFAULT_WEIGHTS, ...parsed.weights } : { ...DEFAULT_WEIGHTS };
+          appState.activeFilter = parsed.activeFilter || 'All';
+          appState.fatigue = parsed.fatigue || { pizza: false, tacos: false, burgers: false };
+          appState.selectedVector = parsed.selectedVector || 'On the Right';
+        } else {
+          appState.restaurants = JSON.parse(JSON.stringify(DEFAULT_RESTAURANTS));
+          appState.inbox = JSON.parse(JSON.stringify(DEFAULT_INBOX));
+          saveState();
+        }
+      } catch (e) {
+        console.error('Failed to load state from localStorage:', e);
+        appState.restaurants = JSON.parse(JSON.stringify(DEFAULT_RESTAURANTS));
+        appState.inbox = JSON.parse(JSON.stringify(DEFAULT_INBOX));
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.error('Failed to save state:', e);
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 2. CULINARY GRAVITY INDEX (CGI) SCORING ENGINE
+    // -----------------------------------------------------------------------
+    function computeSpotMetrics(spot) {
+      // Pillar 1: Hole-in-the-Wall Anomaly Quotient (Aq)
+      // Sweet spot: 4.1 to 4.6 stars and 40 to 450 reviews
+      let aq = 65;
+      if (spot.googleRating >= 4.1 && spot.googleRating <= 4.65) {
+        aq += 20;
+      } else if (spot.googleRating > 4.65) {
+        aq += 12;
+      } else {
+        aq -= 10;
+      }
+      if (spot.reviewCount >= 40 && spot.reviewCount <= 450) {
+        aq += 12;
+      } else if (spot.reviewCount > 1500) {
+        aq -= 15; // Likely massive chain/tourist trap
+      }
+      if (spot.isStripMallGem) aq += 4;
+      aq = Math.max(20, Math.min(99, aq));
+
+      // Pillar 2: Personal Taste Match (Gs) from 1-10 rating
+      const gs = Math.max(10, Math.min(100, Math.round((spot.tasteScore || 8) * 10)));
+
+      // Pillar 3: Curiosity Urgency & Aging (Uv)
+      let uv = 72;
+      if (spot.daysOnList <= 14) {
+        uv += 18; // Fresh discovery boost
+      } else if (spot.daysOnList >= 45) {
+        uv += 14; // "Use-it-or-lose-it" urgency spike
+      }
+      if ((spot.repeatCaptures || 1) >= 2) {
+        uv += Math.min(10, spot.repeatCaptures * 3);
+      }
+      uv = Math.max(20, Math.min(99, uv));
+
+      // Pillar 4: Contextual Friction & Proximity (Cb)
+      const cb = Math.max(20, Math.min(99, spot.proximityScore || 85));
+
+      // Weighted composite
+      const w = appState.weights;
+      const totalWeight = (w.anomaly + w.taste + w.urgency + w.context) || 1;
+      const weightedBase = (
+        aq * w.anomaly +
+        gs * w.taste +
+        uv * w.urgency +
+        cb * w.context
+      ) / totalWeight;
+
+      // 48-Hour Palate Fatigue Penalty (-25 pts)
+      let fatiguePenalty = 0;
+      if (appState.fatigue.pizza && spot.fatigueGroup === 'pizza') fatiguePenalty += 25;
+      if (appState.fatigue.tacos && spot.fatigueGroup === 'tacos') fatiguePenalty += 25;
+      if (appState.fatigue.burgers && spot.fatigueGroup === 'burgers') fatiguePenalty += 25;
+
+      const vetoMult = spot.vetoMultiplier || 1.0;
+      const finalScore = Math.max(8, Math.min(99, Math.round((weightedBase - fatiguePenalty) * vetoMult)));
+
+      return {
+        aq: Math.round(aq),
+        gs: Math.round(gs),
+        uv: Math.round(uv),
+        cb: Math.round(cb),
+        fatiguePenalty,
+        cgiScore: finalScore
+      };
+    }
+
+    function getFilteredScoredSpots() {
+      return appState.restaurants
+        .filter((spot) => !sessionSnoozedIds.has(spot.id))
+        .filter((spot) => {
+          const f = appState.activeFilter;
+          if (f === 'Fast Casual') return spot.category === 'Fast Casual';
+          if (f === 'Sit-Down') return spot.category === 'Sit-Down';
+          if (f === 'Strip Mall Gem') return spot.isStripMallGem;
+          if (f === 'Open Late') return spot.isOpenLate;
+          return true;
+        })
+        .map((spot) => {
+          const metrics = computeSpotMetrics(spot);
+          return { ...spot, ...metrics };
+        })
+        .sort((a, b) => b.cgiScore - a.cgiScore);
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. UI RENDERING (WHEEL, QUEUE, INBOX, ENGINE)
+    // -----------------------------------------------------------------------
+    function renderAll() {
+      renderHeaderBadges();
+      renderFilterPills();
+      renderFatigueButtons();
+      renderRouletteWheelAndQueue();
+      renderInbox();
+      renderEngineSlidersAndPreview();
+      lucide.createIcons();
+    }
+
+    function renderHeaderBadges() {
+      const activeSpots = getFilteredScoredSpots();
+      document.getElementById('header-active-badge').textContent = `${activeSpots.length} Active`;
+
+      const inboxLen = appState.inbox.length;
+      const desktopBadge = document.getElementById('desktop-inbox-count');
+      const mobileBadge = document.getElementById('mobile-inbox-badge');
+      const captureTabBadge = document.getElementById('capture-tab-inbox-badge');
+      const inboxHeaderCount = document.getElementById('inbox-header-count');
+
+      if (captureTabBadge) captureTabBadge.textContent = inboxLen;
+      if (inboxHeaderCount) inboxHeaderCount.textContent = inboxLen;
+
+      if (inboxLen > 0) {
+        desktopBadge.textContent = inboxLen;
+        desktopBadge.classList.remove('hidden');
+        mobileBadge.textContent = inboxLen;
+        mobileBadge.classList.remove('hidden');
+      } else {
+        desktopBadge.classList.add('hidden');
+        mobileBadge.classList.add('hidden');
+      }
+    }
+
+    function renderFilterPills() {
+      const filters = ['All', 'Fast Casual', 'Sit-Down', 'Strip Mall Gem', 'Open Late'];
+      const container = document.getElementById('filter-pills-container');
+      container.innerHTML = filters.map((f) => {
+        const isActive = appState.activeFilter === f;
+        return `
+          <button onclick="setFilter('${f}')" class="px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${
+            isActive
+              ? 'bg-amber-500/20 border-amber-400 text-amber-300'
+              : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:border-zinc-700'
+          }">
+            ${f}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderFatigueButtons() {
+      const map = [
+        { key: 'pizza', id: 'fatigue-btn-pizza', label: '🍕 Had Pizza' },
+        { key: 'tacos', id: 'fatigue-btn-tacos', label: '🌮 Had Tacos' },
+        { key: 'burgers', id: 'fatigue-btn-burgers', label: '🍔 Burgers/Subs' }
+      ];
+      map.forEach((item) => {
+        const btn = document.getElementById(item.id);
+        const active = appState.fatigue[item.key];
+        btn.textContent = active ? `${item.label} (-25)` : item.label;
+        btn.className = active
+          ? 'py-2.5 px-2 rounded-xl text-xs font-bold border bg-rose-500/20 border-rose-500 text-rose-300 transition-all'
+          : 'py-2.5 px-2 rounded-xl text-xs font-bold border bg-zinc-950 border-zinc-800 text-zinc-400 transition-all';
+      });
+    }
+
+    function createSvgArcPath(startAngle, endAngle, radius = 148, cx = 160, cy = 160) {
+      if (endAngle - startAngle >= 359.9) {
+        return `M ${cx} ${cy - radius} A ${radius} ${radius} 0 1 1 ${cx - 0.01} ${cy - radius} Z`;
+      }
+      const startRad = ((startAngle - 90) * Math.PI) / 180;
+      const endRad = ((endAngle - 90) * Math.PI) / 180;
+      const x1 = cx + radius * Math.cos(startRad);
+      const y1 = cy + radius * Math.sin(startRad);
+      const x2 = cx + radius * Math.cos(endRad);
+      const y2 = cy + radius * Math.sin(endRad);
+      const largeArc = endAngle - startAngle <= 180 ? '0' : '1';
+      return `M ${cx} ${cy} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+    }
+
+    function renderRouletteWheelAndQueue() {
+      const spots = getFilteredScoredSpots();
+      const svg = document.getElementById('roulette-svg');
+      const wheelWrapper = document.getElementById('wheel-wrapper');
+      const emptyState = document.getElementById('wheel-empty-state');
+      const queueList = document.getElementById('ranked-queue-list');
+      const queueCount = document.getElementById('queue-count');
+
+      queueCount.textContent = spots.length;
+
+      if (spots.length === 0) {
+        wheelWrapper.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        queueList.innerHTML = `<p class="text-xs text-zinc-500 text-center py-6">No spots match active filters.</p>`;
+        return;
+      }
+
+      wheelWrapper.classList.remove('hidden');
+      emptyState.classList.add('hidden');
+      emptyState.classList.remove('flex');
+
+      const totalCgi = spots.reduce((sum, s) => sum + s.cgiScore, 0);
+      let cumulative = 0;
+
+      const slices = spots.map((s) => {
+        const sliceAngle = (s.cgiScore / totalCgi) * 360;
+        const startAngle = cumulative;
+        const endAngle = cumulative + sliceAngle;
+        cumulative = endAngle;
+        const probabilityPct = Math.round((s.cgiScore / totalCgi) * 100);
+        return { ...s, startAngle, endAngle, sliceAngle, probabilityPct };
+      });
+
+      // Build SVG markup
+      let svgMarkup = `<circle cx="160" cy="160" r="155" fill="#09090b" stroke="#27272a" stroke-width="5" />`;
+      slices.forEach((slice) => {
+        const midAngle = slice.startAngle + slice.sliceAngle / 2;
+        const rad = ((midAngle - 90) * Math.PI) / 180;
+        const labelR = 96;
+        const lx = 160 + labelR * Math.cos(rad);
+        const ly = 160 + labelR * Math.sin(rad);
+        const shortName = slice.name.split(' ')[0].replace(/[^a-zA-Z0-9']/g, '');
+
+        svgMarkup += `
+          <g onclick="openDossierModal('${slice.id}')" class="cursor-pointer hover:opacity-90 transition-opacity">
+            <path d="${createSvgArcPath(slice.startAngle, slice.endAngle)}" fill="${slice.color}" stroke="#09090b" stroke-width="3" />
+            ${slice.sliceAngle > 18 ? `
+              <g transform="translate(${lx}, ${ly}) rotate(${midAngle})">
+                <text text-anchor="middle" fill="#09090b" font-size="10" font-weight="900" dy="-2">${shortName.toUpperCase()}</text>
+                <text text-anchor="middle" fill="#09090b" font-size="10" font-weight="800" dy="10">CGI ${slice.cgiScore}</text>
+              </g>
+            ` : ''}
+          </g>
+        `;
+      });
+
+      // Center Hub
+      svgMarkup += `
+        <circle cx="160" cy="160" r="32" fill="#09090b" stroke="#f59e0b" stroke-width="4" />
+        <text x="160" y="157" text-anchor="middle" fill="#f59e0b" font-size="9" font-weight="900">CGI</text>
+        <text x="160" y="168" text-anchor="middle" fill="#f4f4f5" font-size="7" font-weight="700">WHEEL</text>
+      `;
+      svg.innerHTML = svgMarkup;
+
+      // Render Ranked Contenders List
+      queueList.innerHTML = slices.map((item, idx) => `
+        <div onclick="openDossierModal('${item.id}')" class="group p-3.5 rounded-2xl bg-zinc-950 hover:bg-zinc-800/80 border border-zinc-800 hover:border-amber-500/50 transition-all cursor-pointer flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-3 h-10 rounded-full shrink-0" style="background-color: ${item.color}"></div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-black text-amber-400">#${idx + 1}</span>
+                <h4 class="text-sm font-bold text-white truncate group-hover:text-amber-300">${item.name}</h4>
+                ${item.visited ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300">Visited</span>` : ''}
+              </div>
+              <p class="text-xs text-zinc-400 truncate">${item.corridor} • ${item.googleRating}★ (${item.reviewCount})</p>
+              <div class="flex items-center gap-1 mt-1 flex-wrap">
+                ${(item.tags || []).slice(0, 3).map((t) => `<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-300 border border-zinc-800">${t}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+
+          <div class="text-right shrink-0">
+            <div class="inline-flex flex-col items-end px-2.5 py-1 rounded-xl bg-zinc-900 border border-zinc-800">
+              <span class="text-[9px] font-bold text-zinc-400 uppercase">CGI</span>
+              <span class="text-base font-black text-emerald-400">${item.cgiScore}</span>
+            </div>
+            <span class="block text-[10px] font-bold text-amber-400 mt-1">${item.probabilityPct}% odds</span>
+          </div>
+        </div>
+      `).join('');
+
+      // Store computed slices globally for spin physics
+      window.__currentWheelSlices = slices;
+    }
+
+    // -----------------------------------------------------------------------
+    // 4. ROULETTE SPIN PHYSICS & TACTICAL DOSSIER MODAL
+    // -----------------------------------------------------------------------
+    function spinRouletteWheel() {
+      const slices = window.__currentWheelSlices || [];
+      if (isWheelSpinning || slices.length === 0) return;
+
+      isWheelSpinning = true;
+      const spinBtn = document.getElementById('spin-btn');
+      const spinLabel = document.getElementById('spin-btn-label');
+      const pointer = document.getElementById('wheel-pointer');
+      const svg = document.getElementById('roulette-svg');
+
+      spinBtn.disabled = true;
+      spinLabel.textContent = 'CALCULATING GRAVITY VECTOR...';
+      pointer.classList.add('pointer-ticking');
+
+      // Weighted random pick proportional to CGI score
+      const totalCgi = slices.reduce((sum, s) => sum + s.cgiScore, 0);
+      let rand = Math.random() * totalCgi;
+      let winner = slices[0];
+      for (const slice of slices) {
+        if (rand <= slice.cgiScore) {
+          winner = slice;
+          break;
+        }
+        rand -= slice.cgiScore;
+      }
+
+      // Compute exact angle to land top pointer (0 deg) on middle of winning slice
+      const midAngle = winner.startAngle + winner.sliceAngle / 2;
+      const targetAngle = (360 - midAngle) % 360;
+      const currentMod = currentWheelRotation % 360;
+      const extraSpins = 360 * 6;
+      const delta = extraSpins + ((targetAngle - currentMod + 360) % 360);
+      currentWheelRotation += delta;
+
+      svg.style.transition = 'transform 3.4s cubic-bezier(0.12, 0.86, 0.2, 1)';
+      svg.style.transform = `rotate(${currentWheelRotation}deg)`;
+
+      setTimeout(() => {
+        isWheelSpinning = false;
+        spinBtn.disabled = false;
+        spinLabel.textContent = 'SPIN PRIORITY ROULETTE';
+        pointer.classList.remove('pointer-ticking');
+        openDossierModal(winner.id);
+      }, 3500);
+    }
+
+    function openDossierModal(spotId) {
+      const slices = window.__currentWheelSlices || getFilteredScoredSpots();
+      const spot = slices.find((s) => s.id === spotId) || getFilteredScoredSpots().find((s) => s.id === spotId);
+      if (!spot) return;
+
+      activeDossierSpotId = spot.id;
+
+      document.getElementById('modal-name').textContent = spot.name;
+      document.getElementById('modal-meta').textContent = `${spot.corridor} • ${spot.googleRating}★ (${spot.reviewCount} reviews) • ${spot.category}`;
+      document.getElementById('modal-cgi-score').textContent = spot.cgiScore;
+      document.getElementById('modal-odds-badge').textContent = `${spot.probabilityPct || Math.round(100 / Math.max(1, slices.length))}% Wheel Odds`;
+
+      const visitedBadge = document.getElementById('modal-visited-badge');
+      if (spot.visited) {
+        visitedBadge.classList.remove('hidden');
+      } else {
+        visitedBadge.classList.add('hidden');
+      }
+
+      // Tags
+      document.getElementById('modal-tags').innerHTML = (spot.tags || []).map((t) => `
+        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-bold text-amber-300">${t}</span>
+      `).join('');
+
+      // 4-Pillar Bars
+      document.getElementById('bar-val-aq').textContent = `${spot.aq}/100`;
+      document.getElementById('bar-fill-aq').style.width = `${spot.aq}%`;
+      document.getElementById('bar-val-gs').textContent = `${spot.gs}/100`;
+      document.getElementById('bar-fill-gs').style.width = `${spot.gs}%`;
+      document.getElementById('bar-val-uv').textContent = `${spot.uv}/100`;
+      document.getElementById('bar-fill-uv').style.width = `${spot.uv}%`;
+      document.getElementById('bar-val-cb').textContent = `${spot.cb}/100`;
+      document.getElementById('bar-fill-cb').style.width = `${spot.cb}%`;
+
+      // Voice note & Google Maps link
+      document.getElementById('modal-voice-note').textContent = spot.voiceNote || '"Captured on drive-by"';
+      document.getElementById('modal-corridor-tag').textContent = `${spot.lat.toFixed(4)}, ${spot.lng.toFixed(4)}`;
+
+      const mapsQuery = encodeURIComponent(`${spot.name} ${spot.corridor}`);
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+      document.getElementById('modal-gmaps-link').href = mapsUrl;
+
+      // Wire 3 Action Buttons
+      document.getElementById('modal-btn-roll').onclick = () => {
+        appState.restaurants = appState.restaurants.map((r) =>
+          r.id === spot.id ? { ...r, visited: true } : r
+        );
+        saveState();
+        renderAll();
+        closeDossierModal();
+        showToast(`Marked "${spot.name}" as Visited & launching Google Maps!`);
+        window.open(mapsUrl, '_blank', 'noopener,noreferrer');
+      };
+
+      document.getElementById('modal-btn-snooze').onclick = () => {
+        sessionSnoozedIds.add(spot.id);
+        renderAll();
+        closeDossierModal();
+        showToast(`Snoozed "${spot.name}" for this session without penalty.`);
+      };
+
+      document.getElementById('modal-btn-veto').onclick = () => {
+        appState.restaurants = appState.restaurants.map((r) =>
+          r.id === spot.id ? { ...r, vetoMultiplier: +((r.vetoMultiplier || 1.0) * 0.7).toFixed(2) } : r
+        );
+        saveState();
+        renderAll();
+        closeDossierModal();
+        showToast(`Demoted "${spot.name}" by -30% CGI score.`);
+      };
+
+      const modal = document.getElementById('dossier-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeDossierModal() {
+      const modal = document.getElementById('dossier-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // -----------------------------------------------------------------------
+    // 5. ZERO-LOOK CAPTURE (GEOLOCATION + WEB SPEECH API)
+    // -----------------------------------------------------------------------
+    function selectCaptureVector(vectorLabel) {
+      appState.selectedVector = vectorLabel;
+      saveState();
+      document.querySelectorAll('.vector-btn').forEach((btn) => {
+        const isMatch = btn.getAttribute('data-vector') === vectorLabel;
+        btn.className = isMatch
+          ? 'vector-btn py-4 px-2 rounded-2xl font-extrabold text-xs sm:text-sm border-2 bg-amber-500/20 border-amber-400 text-amber-300 flex flex-col items-center gap-1.5 transition-all'
+          : 'vector-btn py-4 px-2 rounded-2xl font-extrabold text-xs sm:text-sm border-2 bg-zinc-950 border-zinc-800 text-zinc-400 flex flex-col items-center gap-1.5 transition-all';
+      });
+      document.getElementById('giant-capture-sub').textContent =
+        `Captures Live GPS + "${vectorLabel}" Vector → Sends to Inbox`;
+    }
+
+    function appendQuickCue(cueText) {
+      const input = document.getElementById('capture-note-input');
+      input.value = input.value ? `${input.value}; ${cueText}` : cueText;
+    }
+
+    function startVoiceDictation() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const label = document.getElementById('voice-dictate-label');
+      const input = document.getElementById('capture-note-input');
+
+      if (!SpeechRecognition) {
+        showToast('Speech dictation unavailable in this browser—type or tap a quick cue chip.');
+        input.focus();
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      label.textContent = 'Listening... Speak Now';
+      recognition.start();
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        input.value = input.value ? `${input.value} "${transcript}"` : `"${transcript}"`;
+        label.textContent = 'Dictate Voice Note';
+        showToast('Voice note transcribed!');
+      };
+
+      recognition.onerror = () => {
+        label.textContent = 'Dictate Voice Note';
+        showToast('Mic permission blocked or timed out—you can type a quick cue instead.');
+      };
+
+      recognition.onend = () => {
+        label.textContent = 'Dictate Voice Note';
+      };
+    }
+
+    function captureRoadsideSpot() {
+      const btnTitle = document.getElementById('giant-capture-title');
+      const gpsPill = document.getElementById('gps-status-pill');
+      const noteInput = document.getElementById('capture-note-input');
+      const userNote = noteInput.value.trim() || `"Roadside spot spotted (${appState.selectedVector})"`;
+
+      btnTitle.textContent = 'LOCKING GPS COORDINATES...';
+
+      const finalizePin = (lat, lng, isSimulated) => {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const dateStr = now.toLocaleDateString([], { month: 'short', day: 'numeric' });
+
+        const newPin = {
+          id: `pin-${Date.now()}`,
+          timestamp: `${dateStr}, ${timeStr}`,
+          vector: appState.selectedVector,
+          lat: +lat.toFixed(5),
+          lng: +lng.toFixed(5),
+          voiceNote: userNote
+        };
+
+        appState.inbox.unshift(newPin);
+        saveState();
+        renderAll();
+
+        noteInput.value = '';
+        btnTitle.textContent = 'TAP TO PIN ROADSIDE SPOT';
+        gpsPill.textContent = isSimulated
+          ? `GPS: Simulated (${lat.toFixed(4)}, ${lng.toFixed(4)})`
+          : `GPS: Locked (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+
+        showToast(`Pinned! Sent to Capture Inbox (${appState.selectedVector}).`);
+      };
+
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            finalizePin(pos.coords.latitude, pos.coords.longitude, false);
+          },
+          () => {
+            // Graceful fallback with realistic Chicagoland jitter if desktop/permission denied
+            const jitterLat = 41.768 + (Math.random() - 0.5) * 0.03;
+            const jitterLng = -88.185 + (Math.random() - 0.5) * 0.04;
+            finalizePin(jitterLat, jitterLng, true);
+          },
+          { enableHighAccuracy: true, timeout: 4500, maximumAge: 0 }
+        );
+      } else {
+        const jitterLat = 41.768 + (Math.random() - 0.5) * 0.03;
+        const jitterLng = -88.185 + (Math.random() - 0.5) * 0.04;
+        finalizePin(jitterLat, jitterLng, true);
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // 6. CAPTURE INBOX VERIFICATION & PROMOTION TO WHEEL
+    // -----------------------------------------------------------------------
+    function renderInbox() {
+      const container = document.getElementById('inbox-list-container');
+      if (appState.inbox.length === 0) {
+        container.innerHTML = `
+          <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-10 text-center">
+            <i data-lucide="check-circle-2" class="w-12 h-12 text-emerald-400 mx-auto mb-3"></i>
+            <h3 class="text-lg font-bold text-white">Capture Inbox Empty</h3>
+            <p class="text-xs text-zinc-400 max-w-md mx-auto mt-1">
+              Use the Zero-Look Capture tab while driving to pin intriguing restaurants, then verify them here when parked.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = appState.inbox.map((pin) => {
+        const gmapsVerifyUrl = `https://www.google.com/maps/search/restaurants/@${pin.lat},${pin.lng},17z`;
+        return `
+          <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 sm:p-6 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-zinc-800">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    ${pin.timestamp}
+                  </span>
+                  <span class="text-xs font-bold text-emerald-400">${pin.vector}</span>
+                </div>
+                <p class="text-xs font-mono text-zinc-400 mt-1">
+                  Coordinates: ${pin.lat}, ${pin.lng}
+                </p>
+                <p class="text-xs italic text-zinc-200 mt-1">${pin.voiceNote}</p>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <a href="${gmapsVerifyUrl}" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2.5 rounded-xl bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 font-bold text-xs flex items-center gap-1.5">
+                  <i data-lucide="map" class="w-4 h-4"></i>
+                  Verify on Google Maps
+                </a>
+                <button onclick="discardInboxPin('${pin.id}')" class="p-2.5 rounded-xl bg-zinc-950 hover:bg-rose-500/20 text-zinc-500 hover:text-rose-400 border border-zinc-800" title="Discard Pin">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Inline Quick Confirmation Form -->
+            <form onsubmit="promoteInboxPin(event, '${pin.id}')" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+              <div class="sm:col-span-4">
+                <label class="text-[10px] font-bold uppercase text-zinc-400 block mb-1">Confirmed Restaurant Name *</label>
+                <input name="name" required type="text" placeholder="e.g., Lanzhou Hand-Pulled Noodles" class="w-full px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 focus:border-amber-400 focus:outline-none text-xs text-white" />
+              </div>
+
+              <div class="sm:col-span-3">
+                <label class="text-[10px] font-bold uppercase text-zinc-400 block mb-1">Category &amp; Fatigue Group</label>
+                <select name="category" class="w-full px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 focus:border-amber-400 focus:outline-none text-xs text-white">
+                  <option value="Fast Casual|other">Fast Casual</option>
+                  <option value="Sit-Down|other">Sit-Down</option>
+                  <option value="Fast Casual|tacos">Tacos / Mexican</option>
+                  <option value="Fast Casual|pizza">Pizza</option>
+                  <option value="Fast Casual|burgers">Burgers / Subs</option>
+                </select>
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="text-[10px] font-bold uppercase text-zinc-400 block mb-1">Google ★ / Reviews</label>
+                <div class="grid grid-cols-2 gap-1.5">
+                  <input name="rating" type="number" step="0.1" min="1" max="5" value="4.4" class="w-full px-2 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-white text-center" />
+                  <input name="reviews" type="number" min="1" value="150" class="w-full px-2 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-white text-center" />
+                </div>
+              </div>
+
+              <div class="sm:col-span-1">
+                <label class="text-[10px] font-bold uppercase text-zinc-400 block mb-1">Taste (1-10)</label>
+                <input name="taste" type="number" min="1" max="10" step="0.5" value="9" class="w-full px-2 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-white text-center" />
+              </div>
+
+              <div class="sm:col-span-2">
+                <button type="submit" class="w-full py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1">
+                  <i data-lucide="plus" class="w-4 h-4"></i>
+                  Add to Wheel
+                </button>
+              </div>
+            </form>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function promoteInboxPin(event, pinId) {
+      event.preventDefault();
+      const pin = appState.inbox.find((p) => p.id === pinId);
+      if (!pin) return;
+
+      const form = event.target;
+      const name = form.name.value.trim();
+      const [category, fatigueGroup] = form.category.value.split('|');
+      const googleRating = parseFloat(form.rating.value) || 4.4;
+      const reviewCount = parseInt(form.reviews.value, 10) || 150;
+      const tasteScore = parseFloat(form.taste.value) || 8.5;
+
+      const color = SLICE_PALETTE[appState.restaurants.length % SLICE_PALETTE.length];
+
+      const newRestaurant = {
+        id: `spot-${Date.now()}`,
+        name,
+        corridor: `Pinned (${pin.vector})`,
+        lat: pin.lat,
+        lng: pin.lng,
+        category,
+        fatigueGroup,
+        isStripMallGem: true,
+        isOpenLate: false,
+        googleRating,
+        reviewCount,
+        tasteScore,
+        daysOnList: 1,
+        repeatCaptures: 1,
+        proximityScore: 90,
+        vetoMultiplier: 1.0,
+        visited: false,
+        color,
+        voiceNote: pin.voiceNote,
+        tags: ['#NewDiscovery', '#StripMallGem', `#${category.replace(/\s+/g, '')}`]
+      };
+
+      appState.restaurants.unshift(newRestaurant);
+      appState.inbox = appState.inbox.filter((p) => p.id !== pinId);
+      saveState();
+      renderAll();
+      showToast(`"${name}" promoted to your Priority Roulette Wheel!`);
+      switchTab('roulette');
+    }
+
+    function discardInboxPin(pinId) {
+      appState.inbox = appState.inbox.filter((p) => p.id !== pinId);
+      saveState();
+      renderAll();
+      showToast('Removed pin from Capture Inbox.');
+    }
+
+    // -----------------------------------------------------------------------
+    // 7. CGI ENGINE SLIDERS & LIVE PROBABILITY PREVIEW
+    // -----------------------------------------------------------------------
+    function updateWeight(key, val) {
+      appState.weights[key] = Number(val);
+      saveState();
+      renderEngineSlidersAndPreview();
+      renderRouletteWheelAndQueue();
+    }
+
+    function resetWeightsToDefault() {
+      appState.weights = { ...DEFAULT_WEIGHTS };
+      saveState();
+      renderAll();
+      showToast('CGI weights restored to 30 / 30 / 20 / 20.');
+    }
+
+    function renderEngineSlidersAndPreview() {
+      const w = appState.weights;
+      document.getElementById('slider-anomaly').value = w.anomaly;
+      document.getElementById('slider-taste').value = w.taste;
+      document.getElementById('slider-urgency').value = w.urgency;
+      document.getElementById('slider-context').value = w.context;
+
+      document.getElementById('weight-val-anomaly').textContent = `${w.anomaly}%`;
+      document.getElementById('weight-val-taste').textContent = `${w.taste}%`;
+      document.getElementById('weight-val-urgency').textContent = `${w.urgency}%`;
+      document.getElementById('weight-val-context').textContent = `${w.context}%`;
+
+      const spots = getFilteredScoredSpots();
+      const totalCgi = spots.reduce((sum, s) => sum + s.cgiScore, 0) || 1;
+      const previewContainer = document.getElementById('engine-preview-bars');
+
+      previewContainer.innerHTML = spots.map((s) => {
+        const pct = Math.round((s.cgiScore / totalCgi) * 100);
+        return `
+          <div class="p-3 rounded-2xl bg-zinc-950 border border-zinc-800">
+            <div class="flex items-center justify-between text-xs font-bold mb-1.5">
+              <span class="text-white truncate pr-2">${s.name}</span>
+              <span class="text-emerald-400 font-mono shrink-0">CGI ${s.cgiScore} (${pct}%)</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-zinc-900 overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-200" style="width: ${pct}%; background-color: ${s.color};"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // -----------------------------------------------------------------------
+    // 8. FILTERS, TABS, BACKUP / RESTORE & TOAST HELPERS
+    // -----------------------------------------------------------------------
+    function setFilter(filterName) {
+      appState.activeFilter = filterName;
+      saveState();
+      renderAll();
+    }
+
+    function toggleFatigue(key) {
+      appState.fatigue[key] = !appState.fatigue[key];
+      saveState();
+      renderAll();
+    }
+
+    function resetSessionSnoozes() {
+      sessionSnoozedIds.clear();
+      renderAll();
+      showToast('All session-snoozed spots restored to the wheel.');
+    }
+
+    function clearAllFilters() {
+      appState.activeFilter = 'All';
+      appState.fatigue = { pizza: false, tacos: false, burgers: false };
+      sessionSnoozedIds.clear();
+      saveState();
+      renderAll();
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-panel').forEach((panel) => {
+        panel.classList.add('hidden');
+        panel.classList.remove('grid');
+      });
+
+      const target = document.getElementById(`tab-${tabName}`);
+      target.classList.remove('hidden');
+      if (tabName === 'roulette' || tabName === 'capture') {
+        target.classList.add('grid');
+      }
+
+      // Update Desktop Tab Styling
+      document.querySelectorAll('.nav-tab-btn').forEach((btn) => {
+        const isMatch = btn.getAttribute('data-tab') === tabName;
+        btn.className = isMatch
+          ? 'nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-amber-500 text-zinc-950'
+          : 'nav-tab-btn flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-zinc-400 hover:text-white';
+      });
+
+      // Update Mobile Bottom Nav Styling
+      document.querySelectorAll('.mobile-nav-btn').forEach((btn) => {
+        const isMatch = btn.getAttribute('data-tab') === tabName;
+        btn.className = isMatch
+          ? 'mobile-nav-btn relative flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-bold text-amber-400 bg-zinc-900'
+          : 'mobile-nav-btn relative flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-bold text-zinc-400';
+      });
+
+      renderAll();
+    }
+
+    function openBackupModal() {
+      const m = document.getElementById('backup-modal');
+      m.classList.remove('hidden');
+      m.classList.add('flex');
+    }
+
+    function closeBackupModal() {
+      const m = document.getElementById('backup-modal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function exportJsonBackup() {
+      const dataStr = JSON.stringify(appState, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `driveby-bites-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('JSON backup file downloaded!');
+    }
+
+    function importJsonBackup(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported.restaurants)) {
+            appState = {
+              restaurants: imported.restaurants,
+              inbox: Array.isArray(imported.inbox) ? imported.inbox : [],
+              weights: imported.weights || { ...DEFAULT_WEIGHTS },
+              activeFilter: imported.activeFilter || 'All',
+              fatigue: imported.fatigue || { pizza: false, tacos: false, burgers: false },
+              selectedVector: imported.selectedVector || 'On the Right'
+            };
+            saveState();
+            renderAll();
+            closeBackupModal();
+            showToast('Backup restored successfully!');
+          } else {
+            showToast('Invalid DriveBy Bites JSON file.');
+          }
+        } catch {
+          showToast('Error parsing JSON backup file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetDemoData() {
+      appState = {
+        restaurants: JSON.parse(JSON.stringify(DEFAULT_RESTAURANTS)),
+        inbox: JSON.parse(JSON.stringify(DEFAULT_INBOX)),
+        weights: { ...DEFAULT_WEIGHTS },
+        activeFilter: 'All',
+        fatigue: { pizza: false, tacos: false, burgers: false },
+        selectedVector: 'On the Right'
+      };
+      sessionSnoozedIds.clear();
+      saveState();
+      renderAll();
+      closeBackupModal();
+      showToast('Demo data restored (6 sample restaurants + 1 inbox pin).');
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const banner = document.getElementById('toast-banner');
+      const text = document.getElementById('toast-text');
+      text.textContent = msg;
+      banner.classList.remove('hidden');
+      banner.classList.add('flex');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.add('hidden');
+        banner.classList.remove('flex');
+      }, 3600);
+    }
+
+    // Boot Application on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      selectCaptureVector(appState.selectedVector);
+      renderAll();
+    });
+  </script>
+</body>
+</html>
