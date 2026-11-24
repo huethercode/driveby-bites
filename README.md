@@ -4,6 +4,8 @@
 
 DriveBy Bites is a single-file, zero-backend Progressive Web App (PWA) designed to capture roadside restaurants while you are driving—using one-tap GPS vector pinning and speech-to-text—and later rank them with an "obscure" weighted priority algorithm so you always know where to eat when hunger strikes.
 
+Try It: [Driveby-Bites](https://huethercode.github.io/driveby-bites/)  https://huethercode.github.io/driveby-bites/
+
 ---
 
 ## ✨ Key Features
