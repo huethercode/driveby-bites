@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self';" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#09090b" />
@@ -702,7 +703,7 @@
           </div>
           <div>
             <h1 class="brand-title">DRIVEBY <span>BITES</span></h1>
-            <p class="brand-sub" id="header-gps-status">Naperville DNA Ready • Tap to Pin</p>
+            <p class="brand-sub" id="header-gps-status">Zero-Look Capture Ready • Tap to Pin</p>
           </div>
         </div>
 
@@ -715,7 +716,7 @@
           <button type="button" class="nav-btn" data-target="inbox">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
             Inbox
-            <span class="badge-pill" id="desktop-inbox-badge">2</span>
+            <span class="badge-pill hidden" id="desktop-inbox-badge">0</span>
           </button>
           <button type="button" class="nav-btn" data-target="roulette">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
@@ -724,6 +725,9 @@
           <button type="button" class="nav-btn" data-target="data">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line></svg>
             CGI &amp; Data
+          </button>
+          <button type="button" class="nav-btn" data-jump="data" style="border: 1px solid rgba(245, 158, 11, 0.45); color: #fcd34d;">
+            Import Seed JSON
           </button>
         </nav>
       </div>
@@ -802,7 +806,7 @@
                 <h2 style="font-size:17px;">Last 3 Roadside Pins</h2>
               </div>
               <button type="button" class="btn btn-dark" style="padding:7px 12px; font-size:12px;" data-jump="inbox">
-                All Inbox (<span id="recent-inbox-count">2</span>)
+                All Inbox (<span id="recent-inbox-count">0</span>)
               </button>
             </div>
             <p class="muted" style="margin-bottom:12px;">
@@ -820,7 +824,7 @@
         <div class="card" style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px;">
           <div>
             <span class="eyebrow amber">Parked Verification Queue</span>
-            <h2>Capture Inbox (<span id="inbox-total-label">2</span>)</h2>
+            <h2>Capture Inbox (<span id="inbox-total-label">0</span>)</h2>
             <p class="muted">Tap "View Location on Map" to check the storefront at 17z zoom, name it, and promote it to the Roulette.</p>
           </div>
           <button type="button" class="btn btn-green" data-jump="pin">+ Pin Another Location</button>
@@ -893,7 +897,7 @@
             </div>
 
             <div class="card">
-              <span class="eyebrow">Active Wheel Contenders (<span id="active-spots-count">14</span>)</span>
+              <span class="eyebrow">Active Wheel Contenders (<span id="active-spots-count">3</span>)</span>
               <p class="muted" style="margin-bottom:12px;">Tap any restaurant below (or any wheel slice) to inspect its Tactical Dossier.</p>
               <div id="ranked-spots-list" style="max-height:420px; overflow-y:auto;"></div>
             </div>
@@ -907,7 +911,7 @@
       <section id="view-data" class="view-section">
         <div class="grid-2">
           <div class="card">
-            <span class="eyebrow amber">Calibrated Naperville Taste DNA</span>
+            <span class="eyebrow amber">Calibrated Taste DNA Engine</span>
             <h2>CGI Scoring Weights</h2>
             <p class="muted" style="margin-bottom:14px;">Adjust how heavily each factor sizes the slices on your Roulette Wheel.</p>
 
@@ -925,7 +929,7 @@
                 <span>2. Taste DNA Match (Gs)</span>
                 <span id="lbl-w-taste" class="mono" style="color:var(--accent-green);">35%</span>
               </div>
-              <p class="muted" style="font-size:12px; margin-bottom:8px;">Matches your Naperville history: Deli Subs, Detroit Pizza, Gastropub, Prime Steak, Tapas, Dim Sum &amp; Sushi.</p>
+              <p class="muted" style="font-size:12px; margin-bottom:8px;">Matches your calibrated culinary preferences: Deli Subs, Detroit Pizza, Gastropub, Prime Steak, Tapas, Dim Sum &amp; Sushi.</p>
               <input type="range" id="rng-w-taste" min="0" max="100" value="35" />
             </div>
 
@@ -949,27 +953,35 @@
           </div>
 
           <div class="card">
+            <div style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.45); border-radius: 16px; padding: 14px; margin-bottom: 16px;">
+              <span class="eyebrow amber">Privacy Protection Active</span>
+              <h3 style="margin: 0 0 6px 0; font-size: 15px; color: #fff;">Import Private Seed JSON</h3>
+              <p class="muted" style="font-size: 12px; margin-bottom: 10px;">
+                Personal dining history and home coordinates are stripped from the public GitHub repository. Import your private seed JSON here to store your personal list strictly inside this device's <code class="mono">localStorage</code>.
+              </p>
+              <label class="btn btn-amber" style="width: 100%; cursor: pointer;">
+                Import Private Seed JSON File
+                <input type="file" id="import-json-input" accept=".json,application/json" style="display:none;" />
+              </label>
+              <p id="import-status-msg" class="mono" style="font-size: 11px; color: #6ee7b7; margin: 8px 0 0 0; display: none;"></p>
+            </div>
+
             <span class="eyebrow">Offline Storage &amp; Sync</span>
-            <h2>Backup, Restore &amp; Reset</h2>
+            <h2>Backup &amp; Reset</h2>
             <p class="muted" style="margin-bottom:14px;">
-              All pins, custom scores, and visit counts are stored locally on your phone in <code class="mono">localStorage</code>. Export a JSON file to transfer between your Android phone and Mac.
+              All pins, custom scores, and visit counts are stored locally on your phone in <code class="mono">driveby_bites_secure_v2</code>. Export a JSON file to sync between your Android phone and Mac.
             </p>
 
             <div style="display:flex; flex-direction:column; gap:10px;">
-              <button type="button" id="export-json-btn" class="btn btn-amber">Download JSON Backup</button>
-
-              <label class="btn btn-dark" style="cursor:pointer;">
-                Import JSON Backup File
-                <input type="file" id="import-json-input" accept=".json" style="display:none;" />
-              </label>
+              <button type="button" id="export-json-btn" class="btn btn-dark">Download JSON Backup</button>
 
               <button type="button" id="reset-history-btn" class="btn btn-rose">
-                Reset to Default Naperville History (14 Spots)
+                Reset to Public Sample Spots (3 Placeholders)
               </button>
             </div>
 
             <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-subtle);">
-              <span class="eyebrow amber">Extracted Naperville Taste DNA</span>
+              <span class="eyebrow amber">Calibrated Taste DNA Affinities</span>
               <div class="chip-wrap">
                 <span class="mini-tag">#DeliSubs (+24)</span>
                 <span class="mini-tag">#DetroitPizza (+24)</span>
@@ -998,7 +1010,7 @@
       <button type="button" class="mob-btn" data-target="inbox">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
         Inbox
-        <span class="badge-pill" id="mobile-inbox-badge">2</span>
+        <span class="badge-pill hidden" id="mobile-inbox-badge">0</span>
       </button>
       <button type="button" class="mob-btn" data-target="roulette">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle></svg>
@@ -1116,8 +1128,8 @@
         // Ignore if Blob URLs are restricted
       }
 
-      // 2. CONSTANTS & PREPOPULATED NAPERVILLE DINING HISTORY
-      var STORAGE_KEY = 'driveby_bites_v3';
+      // 2. CONSTANTS & SANITIZED PUBLIC PLACEHOLDER DATA (NO PERSONAL HISTORY OR HOME COORDS)
+      var STORAGE_KEY = 'driveby_bites_secure_v2';
 
       var TASTE_DNA_AFFINITIES = {
         deli_pizza: 24,
@@ -1130,299 +1142,176 @@
 
       var DEFAULT_RESTAURANTS = [
         {
-          id: 'hist-jersey-mikes',
-          name: "Jersey Mike's Subs",
-          corridor: 'Freedom Dr / Rt 59 • Naperville, IL',
-          lat: 41.8012,
-          lng: -88.2065,
-          dnaKey: 'deli_pizza',
-          priceTier: 'quick',
-          avgSpend: 18,
-          fatigueGroup: 'subs',
-          googleRating: 4.4,
-          reviewCount: 310,
-          visits: 8,
-          proximityScore: 96,
-          vetoMultiplier: 1.0,
-          color: '#3b82f6',
-          voiceNote: "Mike's Way turkey/provolone subs — reliable Naperville pickup staple (8 visits).",
-          tags: ['#DeliSubs', "#Mike'sWay", '#QuickPickup', '#Naperville']
-        },
-        {
-          id: 'hist-portillos',
-          name: "Portillo's",
-          corridor: 'Ogden Ave / Rt 59 • Naperville, IL',
-          lat: 41.7824,
-          lng: -88.2045,
+          id: 'sample-roadside-taqueria',
+          name: 'Sample Roadside Taqueria',
+          corridor: 'Main Corridor • Demo Spot',
+          lat: null,
+          lng: null,
           dnaKey: 'classic',
           priceTier: 'quick',
-          avgSpend: 22,
+          avgSpend: 18,
           fatigueGroup: 'pub',
           googleRating: 4.5,
-          reviewCount: 3850,
-          visits: 3,
-          proximityScore: 95,
+          reviewCount: 240,
+          visits: 1,
+          proximityScore: 94,
           vetoMultiplier: 1.0,
-          color: '#ef4444',
-          voiceNote: 'Dipped Italian beef with hot giardiniera & chocolate cake shake.',
-          tags: ['#ItalianBeef', '#DriveThru', '#ChicagoClassic', '#Naperville']
+          color: '#10b981',
+          voiceNote: 'Sample roadside spot — import your private seed JSON in CGI & Data to load your personal history.',
+          tags: ['#SampleSpot', '#QuickPickup', '#Tacos']
         },
         {
-          id: 'hist-jets-pizza',
-          name: "Jet's Pizza",
-          corridor: 'Naperville, IL',
-          lat: 41.7695,
-          lng: -88.1872,
+          id: 'sample-corner-diner',
+          name: 'Corner Diner & Grill',
+          corridor: 'Highway Junction • Demo Spot',
+          lat: null,
+          lng: null,
+          dnaKey: 'gastropub',
+          priceTier: 'casual',
+          avgSpend: 45,
+          fatigueGroup: 'pub',
+          googleRating: 4.4,
+          reviewCount: 510,
+          visits: 1,
+          proximityScore: 90,
+          vetoMultiplier: 1.0,
+          color: '#3b82f6',
+          voiceNote: 'Sample casual gastropub & diner placeholder.',
+          tags: ['#SampleSpot', '#Gastropub', '#Burgers']
+        },
+        {
+          id: 'sample-brick-oven',
+          name: 'Brick Oven Slice Shop',
+          corridor: 'Downtown Plaza • Demo Spot',
+          lat: null,
+          lng: null,
           dnaKey: 'deli_pizza',
           priceTier: 'quick',
-          avgSpend: 28,
+          avgSpend: 24,
           fatigueGroup: 'pizza',
-          googleRating: 4.4,
-          reviewCount: 420,
+          googleRating: 4.6,
+          reviewCount: 380,
           visits: 2,
           proximityScore: 92,
           vetoMultiplier: 1.0,
           color: '#f59e0b',
-          voiceNote: '8-corner Detroit-style deep dish with crispy caramelized cheese edges.',
-          tags: ['#DetroitPizza', '#TurboCrust', '#CrispyCorners', '#Takeout']
-        },
-        {
-          id: 'hist-grumpy-goat',
-          name: 'Grumpy Goat Tavern',
-          corridor: 'The Highlands / Rt 59 • Naperville, IL',
-          lat: 41.7345,
-          lng: -88.2038,
-          dnaKey: 'gastropub',
-          priceTier: 'casual',
-          avgSpend: 68,
-          fatigueGroup: 'pub',
-          googleRating: 4.3,
-          reviewCount: 680,
-          visits: 1,
-          proximityScore: 91,
-          vetoMultiplier: 1.0,
-          color: '#10b981',
-          voiceNote: 'Elevated pub fare, burgers, and craft drinks along Rt 59.',
-          tags: ['#Gastropub', '#CraftBeer', '#Burgers', '#Naperville']
-        },
-        {
-          id: 'hist-warrens-ale',
-          name: "Warren's Ale House",
-          corridor: 'Wheaton / Naperville Area, IL',
-          lat: 41.8321,
-          lng: -88.1105,
-          dnaKey: 'gastropub',
-          priceTier: 'casual',
-          avgSpend: 61,
-          fatigueGroup: 'pub',
-          googleRating: 4.5,
-          reviewCount: 1150,
-          visits: 1,
-          proximityScore: 84,
-          vetoMultiplier: 1.0,
-          color: '#14b8a6',
-          voiceNote: 'Rotating craft draft list and upscale tavern comfort food ($61 visit).',
-          tags: ['#CraftBeer', '#Gastropub', '#Tavern', '#LocalSpot']
-        },
-        {
-          id: 'hist-minghin',
-          name: 'MingHin Cuisine',
-          corridor: 'Freedom Commons • Naperville, IL',
-          lat: 41.8035,
-          lng: -88.2078,
-          dnaKey: 'asian',
-          priceTier: 'casual',
-          avgSpend: 43,
-          fatigueGroup: 'asian',
-          googleRating: 4.3,
-          reviewCount: 890,
-          visits: 1,
-          proximityScore: 94,
-          vetoMultiplier: 1.0,
-          color: '#f97316',
-          voiceNote: 'Authentic Hong Kong-style dim sum, BBQ pork buns & roast duck ($43 visit).',
-          tags: ['#DimSum', '#Cantonese', '#Dumplings', '#Naperville']
-        },
-        {
-          id: 'hist-shinto',
-          name: 'Shinto Japanese Steakhouse & Sushi',
-          corridor: 'Route 59 • Naperville, IL',
-          lat: 41.7972,
-          lng: -88.2051,
-          dnaKey: 'asian',
-          priceTier: 'datenight',
-          avgSpend: 95,
-          fatigueGroup: 'asian',
-          googleRating: 4.3,
-          reviewCount: 1420,
-          visits: 2,
-          proximityScore: 93,
-          vetoMultiplier: 1.0,
-          color: '#ec4899',
-          voiceNote: 'Teppanyaki grill and specialty maki rolls on Route 59.',
-          tags: ['#Sushi', '#Hibachi', '#Japanese', '#DateNight']
-        },
-        {
-          id: 'hist-meson-sabika',
-          name: 'Mesón Sabika',
-          corridor: 'Aurora Ave • Naperville, IL',
-          lat: 41.7712,
-          lng: -88.1668,
-          dnaKey: 'upscale',
-          priceTier: 'datenight',
-          avgSpend: 115,
-          fatigueGroup: 'other',
-          googleRating: 4.6,
-          reviewCount: 2450,
-          visits: 1,
-          proximityScore: 90,
-          vetoMultiplier: 1.0,
-          color: '#eab308',
-          voiceNote: 'Spanish tapas in an 1847 mansion; bacon-wrapped dates & patatas bravas.',
-          tags: ['#Tapas', '#HistoricMansion', '#ShareablePlates', '#Naperville']
-        },
-        {
-          id: 'hist-sullivans',
-          name: "Sullivan's Steakhouse",
-          corridor: 'Downtown • Naperville, IL',
-          lat: 41.7731,
-          lng: -88.1485,
-          dnaKey: 'upscale',
-          priceTier: 'datenight',
-          avgSpend: 140,
-          fatigueGroup: 'pub',
-          googleRating: 4.4,
-          reviewCount: 1380,
-          visits: 1,
-          proximityScore: 89,
-          vetoMultiplier: 1.0,
-          color: '#dc2626',
-          voiceNote: 'Bone-in ribeye and classic steakhouse sides in Downtown Naperville.',
-          tags: ['#PrimeSteak', '#DryAged', '#DowntownNaperville', '#DateNight']
-        },
-        {
-          id: 'hist-catch-35',
-          name: 'Catch 35',
-          corridor: 'Downtown • Naperville, IL',
-          lat: 41.7739,
-          lng: -88.1476,
-          dnaKey: 'upscale',
-          priceTier: 'datenight',
-          avgSpend: 125,
-          fatigueGroup: 'asian',
-          googleRating: 4.4,
-          reviewCount: 1290,
-          visits: 1,
-          proximityScore: 89,
-          vetoMultiplier: 1.0,
-          color: '#0284c7',
-          voiceNote: 'Georges Bank scallops, fresh seafood & downtown dining.',
-          tags: ['#FreshSeafood', '#DowntownNaperville', '#Oysters', '#DateNight']
-        },
-        {
-          id: 'hist-ramsays-kitchen',
-          name: "Ramsay's Kitchen",
-          corridor: 'Downtown • Naperville, IL',
-          lat: 41.7735,
-          lng: -88.1492,
-          dnaKey: 'upscale',
-          priceTier: 'datenight',
-          avgSpend: 130,
-          fatigueGroup: 'pub',
-          googleRating: 4.2,
-          reviewCount: 940,
-          visits: 1,
-          proximityScore: 89,
-          vetoMultiplier: 1.0,
-          color: '#8b5cf6',
-          voiceNote: "Gordon Ramsay's downtown Naperville flagship; sticky toffee pudding.",
-          tags: ['#BeefWellington', '#DowntownNaperville', '#ChefDriven', '#DateNight']
-        },
-        {
-          id: 'hist-entourage',
-          name: 'Entourage',
-          corridor: 'Route 59 • Naperville, IL',
-          lat: 41.7510,
-          lng: -88.2039,
-          dnaKey: 'upscale',
-          priceTier: 'datenight',
-          avgSpend: 95,
-          fatigueGroup: 'other',
-          googleRating: 4.4,
-          reviewCount: 760,
-          visits: 1,
-          proximityScore: 91,
-          vetoMultiplier: 1.0,
-          color: '#6366f1',
-          voiceNote: 'Sleek Rt 59 dining room with contemporary American plates.',
-          tags: ['#ContemporaryAmerican', '#Cocktails', '#Naperville', '#DateNight']
-        },
-        {
-          id: 'hist-first-watch',
-          name: 'First Watch',
-          corridor: 'Naperville, IL',
-          lat: 41.7798,
-          lng: -88.2042,
-          dnaKey: 'brunch',
-          priceTier: 'casual',
-          avgSpend: 55,
-          fatigueGroup: 'other',
-          googleRating: 4.5,
-          reviewCount: 910,
-          visits: 1,
-          proximityScore: 93,
-          vetoMultiplier: 1.0,
-          color: '#84cc16',
-          voiceNote: 'Elevated daytime breakfast & brunch classics ($55 family brunch visit).',
-          tags: ['#Brunch', '#Breakfast', '#FreshJuice', '#Naperville']
-        },
-        {
-          id: 'hist-solemn-oath',
-          name: 'Solemn Oath Brewery',
-          corridor: 'Quincy Ave • Naperville, IL',
-          lat: 41.7865,
-          lng: -88.1812,
-          dnaKey: 'gastropub',
-          priceTier: 'quick',
-          avgSpend: 35,
-          fatigueGroup: 'pub',
-          googleRating: 4.7,
-          reviewCount: 740,
-          visits: 1,
-          proximityScore: 92,
-          vetoMultiplier: 1.0,
-          color: '#d97706',
-          voiceNote: 'Naperville craft brewery taproom with rotating local food trucks.',
-          tags: ['#CraftBeer', '#Taproom', '#FoodTrucks', '#Naperville']
+          voiceNote: 'Sample crispy Detroit/brick-oven slice placeholder.',
+          tags: ['#SampleSpot', '#DetroitPizza', '#Takeout']
         }
       ];
 
-      var DEFAULT_INBOX = [
-        {
-          id: 'pin-rt59-1',
-          timestamp: 'Yesterday, 5:48 PM',
-          vector: 'On the Right',
-          lat: 41.7642,
-          lng: -88.2041,
-          quickName: 'Route 59 Birria & Charcoal Tacos',
-          tags: ['Tacos', 'Strip Mall Gem'],
-          voiceNote: 'Spotted a birria & charcoal street taco spot in the Route 59 strip plaza near 75th St'
-        },
-        {
-          id: 'pin-ogden-2',
-          timestamp: 'Sat, 1:15 PM',
-          vector: 'Just Passed It',
-          lat: 41.7819,
-          lng: -88.1472,
-          quickName: 'Ogden Ave Italian Grinder & Beef',
-          tags: ['Burger/Sub', 'Drive-Thru'],
-          voiceNote: 'Old-school Italian grinder & hot beef counter on Ogden Ave with packed lunchtime lot'
-        }
-      ];
+      var DEFAULT_INBOX = [];
 
       var SLICE_COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#10b981', '#14b8a6', '#f97316', '#ec4899', '#eab308', '#8b5cf6', '#84cc16'];
 
-      // 3. STATE MANAGEMENT
+      // 3. SECURITY HELPERS: STRICT HTML ESCAPING, SAFE MAPS URL BUILDER & JSON SCHEMA SANITIZER
+      function escapeHTML(str) {
+        return String(str == null ? '' : str).replace(/[&<>"']/g, function (m) {
+          return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+          }[m];
+        });
+      }
+
+      function buildSafeGoogleMapsSearchUrl(lat, lng, queryFallback) {
+        var baseUrl = 'https://www.google.com/maps/search/?api=1&query=';
+        var numLat = Number(lat);
+        var numLng = Number(lng);
+        if (
+          lat !== null &&
+          lng !== null &&
+          isFinite(numLat) &&
+          isFinite(numLng) &&
+          numLat >= -90 &&
+          numLat <= 90 &&
+          numLng >= -180 &&
+          numLng <= 180
+        ) {
+          return baseUrl + encodeURIComponent(numLat.toFixed(6) + ',' + numLng.toFixed(6));
+        }
+        var safeQuery = String(queryFallback || 'restaurants near me').slice(0, 140);
+        return baseUrl + encodeURIComponent(safeQuery);
+      }
+
+      function buildSafeGoogleMapsDirUrl(name, corridor) {
+        var dest = String((name || '') + ' ' + (corridor || '')).trim().slice(0, 160);
+        return 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(dest || 'restaurant');
+      }
+
+      function sanitizeHexColor(colorStr, fallbackIndex) {
+        var raw = String(colorStr || '').trim();
+        if (/^#[0-9a-fA-F]{6}$/.test(raw)) {
+          return raw;
+        }
+        return SLICE_COLORS[(fallbackIndex || 0) % SLICE_COLORS.length];
+      }
+
+      function sanitizeImportedSpot(raw, idx) {
+        if (!raw || typeof raw !== 'object') return null;
+        var validDna = Object.prototype.hasOwnProperty.call(TASTE_DNA_AFFINITIES, raw.dnaKey) ? raw.dnaKey : 'classic';
+        var validTiers = { quick: true, casual: true, datenight: true };
+        var validTier = validTiers[raw.priceTier] ? raw.priceTier : 'quick';
+        var validFatigue = { subs: true, pizza: true, pub: true, asian: true, other: true };
+        var fGroup = validFatigue[raw.fatigueGroup] ? raw.fatigueGroup : 'other';
+
+        var lat = (raw.lat !== null && raw.lat !== undefined && isFinite(Number(raw.lat))) ? Number(raw.lat) : null;
+        var lng = (raw.lng !== null && raw.lng !== undefined && isFinite(Number(raw.lng))) ? Number(raw.lng) : null;
+        if (lat !== null && (lat < -90 || lat > 90)) lat = null;
+        if (lng !== null && (lng < -180 || lng > 180)) lng = null;
+
+        var tags = Array.isArray(raw.tags)
+          ? raw.tags.slice(0, 12).map(function (t) { return String(t || '').slice(0, 32); }).filter(Boolean)
+          : [];
+
+        return {
+          id: String(raw.id || ('imp-spot-' + Date.now() + '-' + idx)).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64) || ('imp-spot-' + idx),
+          name: String(raw.name || 'Imported Spot').slice(0, 100),
+          corridor: String(raw.corridor || 'Saved Corridor').slice(0, 100),
+          lat: lat,
+          lng: lng,
+          dnaKey: validDna,
+          priceTier: validTier,
+          avgSpend: Math.max(1, Math.min(2000, Number(raw.avgSpend) || 25)),
+          fatigueGroup: fGroup,
+          googleRating: Math.max(1, Math.min(5, Number(raw.googleRating) || 4.4)),
+          reviewCount: Math.max(0, Math.min(500000, Math.round(Number(raw.reviewCount) || 150))),
+          visits: Math.max(0, Math.min(5000, Math.round(Number(raw.visits) || 0))),
+          proximityScore: Math.max(1, Math.min(100, Math.round(Number(raw.proximityScore) || 90))),
+          vetoMultiplier: Math.max(0.05, Math.min(2.0, Number(raw.vetoMultiplier) || 1.0)),
+          color: sanitizeHexColor(raw.color, idx),
+          voiceNote: String(raw.voiceNote || '').slice(0, 280),
+          tags: tags
+        };
+      }
+
+      function sanitizeImportedPin(raw, idx) {
+        if (!raw || typeof raw !== 'object') return null;
+        var lat = Number(raw.lat);
+        var lng = Number(raw.lng);
+        var hasValidCoords = isFinite(lat) && isFinite(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+        var validVectors = { 'On the Left': true, 'Just Passed It': true, 'On the Right': true };
+        var vec = validVectors[raw.vector] ? raw.vector : 'On the Right';
+        var tags = Array.isArray(raw.tags)
+          ? raw.tags.slice(0, 10).map(function (t) { return String(t || '').slice(0, 32); }).filter(Boolean)
+          : [];
+
+        return {
+          id: String(raw.id || ('imp-pin-' + Date.now() + '-' + idx)).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64) || ('imp-pin-' + idx),
+          timestamp: String(raw.timestamp || 'Imported Pin').slice(0, 48),
+          vector: vec,
+          lat: hasValidCoords ? Number(lat.toFixed(6)) : null,
+          lng: hasValidCoords ? Number(lng.toFixed(6)) : null,
+          quickName: String(raw.quickName || 'Roadside Pin').slice(0, 100),
+          tags: tags,
+          voiceNote: String(raw.voiceNote || '').slice(0, 280)
+        };
+      }
+
+      // 4. STATE MANAGEMENT
       var state = {
         restaurants: [],
         inbox: [],
@@ -1564,24 +1453,25 @@
         titleEl.textContent = 'LOCKING GPS & MIC...';
         subEl.textContent = 'Hold steady — saving roadside vector';
 
-        var saveCapture = function (lat, lng, isFallback, spokenText) {
+        var saveCapture = function (lat, lng, hasCoords, spokenText) {
           var now = new Date();
           var stamp = now.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ', ' +
                       now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-          var typedName = nameInput.value.trim();
+          var typedName = nameInput.value.trim().slice(0, 100);
+          var cleanSpoken = String(spokenText || '').trim().slice(0, 240);
           var tagsCopy = state.selectedQuickTags.slice();
-          var labelName = typedName || spokenText || (tagsCopy.length ? tagsCopy.join(' / ') + ' Spot' : 'Roadside Spot (' + state.selectedVector + ')');
+          var labelName = typedName || cleanSpoken || (tagsCopy.length ? tagsCopy.join(' / ') + ' Spot' : 'Roadside Spot (' + state.selectedVector + ')');
 
           var newPin = {
             id: 'pin-' + Date.now(),
             timestamp: stamp,
             vector: state.selectedVector,
-            lat: Number(lat.toFixed(5)),
-            lng: Number(lng.toFixed(5)),
+            lat: hasCoords ? Number(lat.toFixed(5)) : null,
+            lng: hasCoords ? Number(lng.toFixed(5)) : null,
             quickName: labelName,
             tags: tagsCopy,
-            voiceNote: spokenText || typedName || ('Pinned while driving (' + state.selectedVector + ')')
+            voiceNote: cleanSpoken || typedName || ('Pinned while driving (' + state.selectedVector + ')')
           };
 
           state.inbox.unshift(newPin);
@@ -1594,8 +1484,9 @@
           titleEl.textContent = 'PIN THIS LOCATION NOW';
           subEl.textContent = 'Locks GPS + "' + state.selectedVector + '" + 4s Voice Memo';
 
-          headerStatus.textContent = (isFallback ? 'Naperville Fallback: ' : 'GPS Locked: ') +
-                                     lat.toFixed(4) + ', ' + lng.toFixed(4);
+          headerStatus.textContent = hasCoords
+            ? ('GPS Locked: ' + lat.toFixed(4) + ', ' + lng.toFixed(4))
+            : ('Pinned (' + state.selectedVector + ') • GPS Unavailable');
 
           bannerText.textContent = 'PINNED! "' + labelName + '" saved to Inbox';
           banner.classList.add('show');
@@ -1604,10 +1495,10 @@
           }, 5000);
         };
 
-        var captureVoiceThenSave = function (lat, lng, isFallback) {
+        var captureVoiceThenSave = function (lat, lng, hasCoords) {
           var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
           if (!SpeechRec) {
-            saveCapture(lat, lng, isFallback, '');
+            saveCapture(lat, lng, hasCoords, '');
             return;
           }
           try {
@@ -1625,7 +1516,7 @@
               if (!settled) {
                 settled = true;
                 try { rec.stop(); } catch (e) {}
-                saveCapture(lat, lng, isFallback, '');
+                saveCapture(lat, lng, hasCoords, '');
               }
             }, 4000);
 
@@ -1634,46 +1525,42 @@
               settled = true;
               clearTimeout(timer);
               var transcript = (ev.results && ev.results[0] && ev.results[0][0]) ? ev.results[0][0].transcript : '';
-              saveCapture(lat, lng, isFallback, transcript);
+              saveCapture(lat, lng, hasCoords, transcript);
             };
 
             rec.onerror = function () {
               if (settled) return;
               settled = true;
               clearTimeout(timer);
-              saveCapture(lat, lng, isFallback, '');
+              saveCapture(lat, lng, hasCoords, '');
             };
 
             rec.onend = function () {
               if (!settled) {
                 settled = true;
                 clearTimeout(timer);
-                saveCapture(lat, lng, isFallback, '');
+                saveCapture(lat, lng, hasCoords, '');
               }
             };
 
             rec.start();
           } catch (e) {
-            saveCapture(lat, lng, isFallback, '');
+            saveCapture(lat, lng, hasCoords, '');
           }
         };
 
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
             function (pos) {
-              captureVoiceThenSave(pos.coords.latitude, pos.coords.longitude, false);
+              captureVoiceThenSave(pos.coords.latitude, pos.coords.longitude, true);
             },
             function () {
-              var lat = 41.7508 + (Math.random() - 0.5) * 0.018;
-              var lng = -88.1535 + (Math.random() - 0.5) * 0.022;
-              captureVoiceThenSave(lat, lng, true);
+              captureVoiceThenSave(null, null, false);
             },
             { enableHighAccuracy: true, timeout: 3500, maximumAge: 0 }
           );
         } else {
-          var lat = 41.7508 + (Math.random() - 0.5) * 0.018;
-          var lng = -88.1535 + (Math.random() - 0.5) * 0.022;
-          captureVoiceThenSave(lat, lng, true);
+          captureVoiceThenSave(null, null, false);
         }
       }
 
@@ -1698,14 +1585,6 @@
       }
 
       // 7. RENDERING FUNCTIONS
-      function escapeHtml(str) {
-        return String(str || '')
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      }
-
       function renderBadges() {
         var count = state.inbox.length;
         var dBadge = document.getElementById('desktop-inbox-badge');
@@ -1733,16 +1612,19 @@
           return;
         }
         container.innerHTML = recent.map(function (p) {
-          var mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + p.lat + ',' + p.lng;
+          var mapUrl = buildSafeGoogleMapsSearchUrl(p.lat, p.lng, p.quickName);
+          var coordLabel = (p.lat !== null && p.lng !== null)
+            ? (escapeHTML(p.lat) + ', ' + escapeHTML(p.lng))
+            : 'GPS pending / manual lookup';
           return (
             '<div class="spot-item" style="cursor:default;">' +
               '<div class="spot-swatch" style="background:#10b981;"></div>' +
               '<div class="spot-info">' +
-                '<p class="spot-name">' + escapeHtml(p.quickName) + '</p>' +
-                '<p class="spot-meta">' + escapeHtml(p.timestamp) + ' • ' + escapeHtml(p.vector) + '</p>' +
-                '<p class="spot-meta mono" style="font-size:11px;">' + p.lat + ', ' + p.lng + '</p>' +
+                '<p class="spot-name">' + escapeHTML(p.quickName) + '</p>' +
+                '<p class="spot-meta">' + escapeHTML(p.timestamp) + ' • ' + escapeHTML(p.vector) + '</p>' +
+                '<p class="spot-meta mono" style="font-size:11px;">' + coordLabel + '</p>' +
               '</div>' +
-              '<a href="' + mapUrl + '" target="_blank" rel="noopener noreferrer" class="btn btn-sky" style="padding:7px 10px; font-size:11px;">Map</a>' +
+              '<a href="' + escapeHTML(mapUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-sky" style="padding:7px 10px; font-size:11px;">Map</a>' +
             '</div>'
           );
         }).join('');
@@ -1757,22 +1639,26 @@
         }
 
         container.innerHTML = state.inbox.map(function (pin) {
-          var mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + pin.lat + ',' + pin.lng;
+          var mapUrl = buildSafeGoogleMapsSearchUrl(pin.lat, pin.lng, pin.quickName);
+          var coordText = (pin.lat !== null && pin.lng !== null)
+            ? ('GPS: ' + escapeHTML(pin.lat) + ', ' + escapeHTML(pin.lng))
+            : 'GPS: Not recorded (opens text search)';
+          var safePinId = escapeHTML(pin.id);
           return (
-            '<div class="card" data-pin-id="' + pin.id + '">' +
+            '<div class="card" data-pin-id="' + safePinId + '">' +
               '<div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:10px; border-bottom:1px solid var(--border-subtle); padding-bottom:12px; margin-bottom:12px;">' +
                 '<div>' +
-                  '<span class="eyebrow">' + escapeHtml(pin.timestamp) + ' • ' + escapeHtml(pin.vector) + '</span>' +
-                  '<p class="mono" style="font-size:12px; color:#a1a1aa; margin:2px 0;">GPS: ' + pin.lat + ', ' + pin.lng + '</p>' +
-                  '<p style="font-size:13px; color:#e4e4e7; margin:4px 0 0 0;">Note: ' + escapeHtml(pin.voiceNote) + '</p>' +
+                  '<span class="eyebrow">' + escapeHTML(pin.timestamp) + ' • ' + escapeHTML(pin.vector) + '</span>' +
+                  '<p class="mono" style="font-size:12px; color:#a1a1aa; margin:2px 0;">' + coordText + '</p>' +
+                  '<p style="font-size:13px; color:#e4e4e7; margin:4px 0 0 0;">Note: ' + escapeHTML(pin.voiceNote) + '</p>' +
                 '</div>' +
                 '<div style="display:flex; gap:8px;">' +
-                  '<a href="' + mapUrl + '" target="_blank" rel="noopener noreferrer" class="btn btn-sky">View Location on Map</a>' +
-                  '<button type="button" class="btn btn-rose" data-action="delete-pin" data-id="' + pin.id + '">Delete</button>' +
+                  '<a href="' + escapeHTML(mapUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-sky">View Location on Map</a>' +
+                  '<button type="button" class="btn btn-rose" data-action="delete-pin" data-id="' + safePinId + '">Delete</button>' +
                 '</div>' +
               '</div>' +
               '<div style="display:grid; grid-template-columns:1fr; gap:10px;">' +
-                '<input type="text" class="text-input pin-edit-name" value="' + escapeHtml(pin.quickName) + '" placeholder="Confirmed Restaurant Name" />' +
+                '<input type="text" class="text-input pin-edit-name" value="' + escapeHTML(pin.quickName) + '" placeholder="Confirmed Restaurant Name" />' +
                 '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">' +
                   '<select class="select-input pin-edit-dna">' +
                     '<option value="deli_pizza|subs|22">Deli Subs / Pizza (~$22)</option>' +
@@ -1781,7 +1667,7 @@
                     '<option value="asian|asian|48">Asian / Sushi / Dim Sum (~$48)</option>' +
                     '<option value="upscale|other|110">Upscale / Steakhouse (~$110)</option>' +
                   '</select>' +
-                  '<button type="button" class="btn btn-green" data-action="promote-pin" data-id="' + pin.id + '">Promote to Roulette</button>' +
+                  '<button type="button" class="btn btn-green" data-action="promote-pin" data-id="' + safePinId + '">Promote to Roulette</button>' +
                 '</div>' +
               '</div>' +
             '</div>'
@@ -1838,19 +1724,21 @@
 
         if (svgEl) {
           var svgHtml = '<circle cx="160" cy="160" r="155" fill="#09090b" stroke="#272730" stroke-width="5" />';
-          currentSlices.forEach(function (sl) {
+          currentSlices.forEach(function (sl, idx) {
             var mid = sl.startAngle + sl.sliceAngle / 2;
             var rad = (mid - 90) * Math.PI / 180;
             var lx = 160 + 98 * Math.cos(rad);
             var ly = 160 + 98 * Math.sin(rad);
             var shortLabel = sl.name.split(' ')[0].replace(/[^a-zA-Z0-9']/g, '').toUpperCase();
+            var safeColor = sanitizeHexColor(sl.color, idx);
+            var safeSpotId = escapeHTML(sl.id);
 
-            svgHtml += '<g data-spot-id="' + sl.id + '" style="cursor:pointer;">';
-            svgHtml += '<path d="' + createArcPath(sl.startAngle, sl.endAngle, 148, 160, 160) + '" fill="' + sl.color + '" stroke="#09090b" stroke-width="2" />';
+            svgHtml += '<g data-spot-id="' + safeSpotId + '" style="cursor:pointer;">';
+            svgHtml += '<path d="' + createArcPath(sl.startAngle, sl.endAngle, 148, 160, 160) + '" fill="' + safeColor + '" stroke="#09090b" stroke-width="2" />';
             if (sl.sliceAngle > 14) {
               svgHtml += '<g transform="translate(' + lx.toFixed(1) + ',' + ly.toFixed(1) + ') rotate(' + mid.toFixed(1) + ')">';
-              svgHtml += '<text text-anchor="middle" fill="#09090b" font-size="9" font-weight="900" dy="-2">' + escapeHtml(shortLabel) + '</text>';
-              svgHtml += '<text text-anchor="middle" fill="#09090b" font-size="8.5" font-weight="800" dy="8">CGI ' + sl.cgiScore + '</text>';
+              svgHtml += '<text text-anchor="middle" fill="#09090b" font-size="9" font-weight="900" dy="-2">' + escapeHTML(shortLabel) + '</text>';
+              svgHtml += '<text text-anchor="middle" fill="#09090b" font-size="8.5" font-weight="800" dy="8">CGI ' + escapeHTML(sl.cgiScore) + '</text>';
               svgHtml += '</g>';
             }
             svgHtml += '</g>';
@@ -1864,19 +1752,21 @@
         if (listEl) {
           listEl.innerHTML = currentSlices.map(function (s, idx) {
             var tagsHtml = (s.tags || []).slice(0, 3).map(function (t) {
-              return '<span class="mini-tag">' + escapeHtml(t) + '</span>';
+              return '<span class="mini-tag">' + escapeHTML(t) + '</span>';
             }).join('');
+            var safeColor = sanitizeHexColor(s.color, idx);
+            var safeSpotId = escapeHTML(s.id);
             return (
-              '<div class="spot-item" data-spot-id="' + s.id + '">' +
-                '<div class="spot-swatch" style="background:' + s.color + ';"></div>' +
+              '<div class="spot-item" data-spot-id="' + safeSpotId + '">' +
+                '<div class="spot-swatch" style="background:' + safeColor + ';"></div>' +
                 '<div class="spot-info">' +
-                  '<p class="spot-name">#' + (idx + 1) + ' ' + escapeHtml(s.name) + '</p>' +
-                  '<p class="spot-meta">' + escapeHtml(s.corridor) + ' • Avg $' + s.avgSpend + ' • ' + (s.visits || 0) + 'x visited</p>' +
+                  '<p class="spot-name">#' + (idx + 1) + ' ' + escapeHTML(s.name) + '</p>' +
+                  '<p class="spot-meta">' + escapeHTML(s.corridor) + ' • Avg $' + escapeHTML(s.avgSpend) + ' • ' + escapeHTML(s.visits || 0) + 'x visited</p>' +
                   '<div class="tag-row">' + tagsHtml + '</div>' +
                 '</div>' +
                 '<div class="cgi-pill">' +
-                  '<span class="cgi-num">' + s.cgiScore + '</span>' +
-                  '<span class="cgi-odds">' + s.oddsPct + '% odds</span>' +
+                  '<span class="cgi-num">' + escapeHTML(s.cgiScore) + '</span>' +
+                  '<span class="cgi-odds">' + escapeHTML(s.oddsPct) + '% odds</span>' +
                 '</div>' +
               '</div>'
             );
@@ -2008,9 +1898,9 @@
         document.getElementById('m-bar-cb').style.width = spot.cb + '%';
 
         document.getElementById('modal-spot-note').textContent = spot.voiceNote || 'Saved Naperville spot';
+        document.getElementById('modal-spot-note').textContent = spot.voiceNote || 'Saved roadside spot';
 
-        var dest = encodeURIComponent(spot.name + ' ' + spot.corridor);
-        var navUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + dest;
+        var navUrl = buildSafeGoogleMapsDirUrl(spot.name, spot.corridor);
         document.getElementById('modal-roll-link').setAttribute('href', navUrl);
 
         document.getElementById('dossier-modal').classList.add('open');
@@ -2109,7 +1999,7 @@
               var newSpot = {
                 id: 'spot-' + Date.now(),
                 name: nameVal,
-                corridor: 'Pinned (' + pin.vector + ') • Naperville',
+                corridor: 'Pinned (' + pin.vector + ')',
                 lat: pin.lat,
                 lng: pin.lng,
                 dnaKey: dnaKey,
@@ -2226,20 +2116,57 @@
 
         document.getElementById('import-json-input').addEventListener('change', function (e) {
           var file = e.target.files && e.target.files[0];
+          var statusEl = document.getElementById('import-status-msg');
           if (!file) return;
           var reader = new FileReader();
           reader.onload = function (ev) {
             try {
               var imported = JSON.parse(ev.target.result);
-              if (Array.isArray(imported.restaurants)) {
-                state.restaurants = imported.restaurants;
-                state.inbox = Array.isArray(imported.inbox) ? imported.inbox : [];
-                if (imported.weights) state.weights = imported.weights;
-                saveState();
-                renderAll();
+              if (!imported || typeof imported !== 'object' || !Array.isArray(imported.restaurants)) {
+                throw new Error('Invalid schema');
+              }
+              var cleanSpots = imported.restaurants
+                .slice(0, 500)
+                .map(function (item, idx) { return sanitizeImportedSpot(item, idx); })
+                .filter(Boolean);
+
+              if (cleanSpots.length === 0) {
+                throw new Error('No valid restaurant records found');
+              }
+
+              var cleanInbox = Array.isArray(imported.inbox)
+                ? imported.inbox.slice(0, 500).map(function (p, idx) { return sanitizeImportedPin(p, idx); }).filter(Boolean)
+                : [];
+
+              state.restaurants = cleanSpots;
+              state.inbox = cleanInbox;
+
+              if (imported.weights && typeof imported.weights === 'object') {
+                state.weights = {
+                  anomaly: Math.max(0, Math.min(100, Number(imported.weights.anomaly) || 25)),
+                  taste: Math.max(0, Math.min(100, Number(imported.weights.taste) || 35)),
+                  urgency: Math.max(0, Math.min(100, Number(imported.weights.urgency) || 20)),
+                  context: Math.max(0, Math.min(100, Number(imported.weights.context) || 20))
+                };
+              }
+
+              snoozedIds = {};
+              saveState();
+              renderAll();
+
+              if (statusEl) {
+                statusEl.style.display = 'block';
+                statusEl.style.color = '#6ee7b7';
+                statusEl.textContent = 'Imported ' + cleanSpots.length + ' restaurants & ' + cleanInbox.length + ' inbox pins privately to localStorage.';
               }
             } catch (err) {
-              // Invalid JSON ignored
+              if (statusEl) {
+                statusEl.style.display = 'block';
+                statusEl.style.color = '#fda4af';
+                statusEl.textContent = 'Import failed: File must be a valid DriveBy Bites JSON backup.';
+              }
+            } finally {
+              e.target.value = '';
             }
           };
           reader.readAsText(file);
